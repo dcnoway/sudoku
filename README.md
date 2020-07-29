@@ -20,5 +20,8 @@ git clone https://github.com/microsoft/vcpkg
 sudo echo "export $VCPKG_ROOT=~/vcpkg/" >> ~/.bashrc
 source ~/.bashrc
 ```
-
+Addtional Doxygen comment documetation toolchain setup
+```
+sudo apt install doxygen graphviz
+```
 
