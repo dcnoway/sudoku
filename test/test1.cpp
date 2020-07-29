@@ -319,3 +319,53 @@ TEST_CASE( "dlx::dlx::clear() check", "[dlx]" ) {
     REQUIRE_NOTHROW(dlx.clear());
     REQUIRE(dlx.col_size() == 0);
 }
+
+TEST_CASE( "dlx::dancing_link::solve_once() on a solvable problem check", "[dlx]" ) {
+    dlx::dancing_links<unsigned> dlx;
+    dlx.init_cols(10);
+    dlx::value_t<unsigned> values1[5]{{1,11},{3,33},{5,55},{7,77},{9,99}};
+    REQUIRE_NOTHROW(dlx.append_row(values1,5));
+
+    dlx::value_t<unsigned> values2[5]{{2,22},{4,44},{6,66},{8,88},{10,1010}};
+    REQUIRE_NOTHROW(dlx.append_row(values2,5));
+
+    dlx::value_t<unsigned> values4[10]{{1,11},{2,22},{3,33},{4,44},{5,55},{6,66},{7,77},{8,88},{9,99},{10,1010}};
+    REQUIRE_NOTHROW( dlx.append_row(values4,10));
+
+    optional<dlx::result_t<unsigned>> res;
+    REQUIRE_NOTHROW(res = dlx.solve_once());
+    REQUIRE(res.has_value());
+    REQUIRE(res->size() == 2);
+    REQUIRE(res.value()[0].size() == 5);
+    REQUIRE(
+        ((res.value()[0][0].col == 2) ||
+        (res.value()[0][1].col == 2) ||
+        (res.value()[0][2].col == 2) ||
+        (res.value()[0][3].col == 2) ||
+        (res.value()[0][4].col == 2))
+    );
+    REQUIRE(
+        ((res.value()[1][0].col == 1) &&
+        (res.value()[1][1].col == 3) &&
+        (res.value()[1][2].col == 5) &&
+        (res.value()[1][3].col == 7) &&
+        (res.value()[1][4].col == 9))
+    );
+}
+
+TEST_CASE( "dlx::dancing_link::solve_once() on a unsolvable problem check", "[dlx]" ) {
+    dlx::dancing_links<unsigned> dlx;
+    dlx.init_cols(10);
+    dlx::value_t<unsigned> values1[5]{{1,11},{3,33},{5,55},{7,77},{9,99}};
+    REQUIRE_NOTHROW(dlx.append_row(values1,5));
+
+    dlx::value_t<unsigned> values2[5]{{1,11},{3,33},{6,66},{8,88},{10,1010}};
+    REQUIRE_NOTHROW(dlx.append_row(values2,5));
+
+    dlx::value_t<unsigned> values4[8]{{1,11},{2,22},{3,33},{4,44},{5,55},{6,66},{7,77},{8,88}};
+    REQUIRE_NOTHROW( dlx.append_row(values4,8));
+
+    optional<dlx::result_t<unsigned>> res;
+    REQUIRE_NOTHROW(res = dlx.solve_once());
+    REQUIRE_FALSE(res.has_value());
+}
