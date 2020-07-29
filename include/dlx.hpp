@@ -362,7 +362,7 @@ namespace wills::dlx
             return ((vector_size == right_size) && (right_size == left_size));
         }
 
-    public:
+    private:
         /**
          * @brief A vector stores all the smart pointer to the column header node
          * NOTICE: column index start from ONE, but this vector's element index start from ZERO
@@ -697,16 +697,16 @@ namespace wills::dlx
             return nullopt;
         }
 
-        /**
-         * @brief 
-         * 
-         * @return true 
-         * @return false 
-         */
-        optional<result_t<T>> solve_multiple()
-        {
-            return nullopt;
-        }
+        // /**
+        //  * @brief 
+        //  * 
+        //  * @return true 
+        //  * @return false 
+        //  */
+        // optional<result_t<T>> solve_multiple()
+        // {
+        //     return nullopt;
+        // }
     };
 } // namespace wills::dlx
 
