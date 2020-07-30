@@ -1,4 +1,0 @@
-#ifndef __WILLS_SUDOKU_SUDOKU
-#define __WILLS_SUDOKU_SUDOKU
-
-#endif
