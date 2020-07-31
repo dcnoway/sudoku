@@ -49,8 +49,11 @@ namespace wills::sudoku
      */
     struct coordinate
     {
-        axis_value_t col = 0; //!< column
-        axis_value_t row = 0; //!< row
+        axis_value_t col; //!< column
+        axis_value_t row; //!< row
+        public:
+        coordinate():col(0),row(0){};
+        coordinate(axis_value_t acol,axis_value_t arow):col(acol),row(arow){};
     };
 
     /**
@@ -84,7 +87,9 @@ namespace wills::sudoku
         /**
          * @brief Construct a new rectangle region object
          */
-        rectangle_region() : a(), b(){};
+        rectangle_region():a(),b(){
+            
+        }
         /**
          * @brief Construct a new rectangle region object
          * 
@@ -93,6 +98,19 @@ namespace wills::sudoku
          */
         rectangle_region(const coordinate &aval, const coordinate &bval) : a(aval), b(bval)
         {
+        }
+
+        rectangle_region(const rectangle_region & obj)noexcept
+        {
+            a = obj.a;
+            b = obj.b;
+        }
+
+        const rectangle_region& operator=(const rectangle_region & obj)noexcept
+        {
+            a = obj.a;
+            b = obj.b;
+            return *this;
         }
 
         /**
@@ -166,7 +184,7 @@ namespace wills::sudoku
         axis_value_t col_size = 0;      //<! the amount size of current board columns
         axis_value_t row_size = 0;      //<! the amount size of current board rows
         vector<cell_value_t> cells;     //!< cells array
-        vector<rectangle_region> _regions;
+        vector<std::shared_ptr<rectangle_region>> _regions;
 
     protected:
         /**
@@ -277,7 +295,7 @@ namespace wills::sudoku
          * 
          * @return vector<rectangle_region> 
          */
-        vector<rectangle_region> rect_regions() const noexcept;
+        vector<std::shared_ptr<rectangle_region>> rect_regions() const noexcept;
 
         /**
          * @brief get the region of the given cell coordinate
@@ -293,7 +311,7 @@ namespace wills::sudoku
          * @param cell 
          * @return const rectangle_region& 
          */
-        optional<rectangle_region> region(const square_cell &cell) const noexcept;
+        std::shared_ptr<rectangle_region> region(const square_cell &cell) const noexcept;
 
         /**
          * @brief Create a subregion object

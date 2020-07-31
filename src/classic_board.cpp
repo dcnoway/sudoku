@@ -92,7 +92,7 @@ namespace wills::sudoku
                 lt.row = (ry -1)*region_row_len + 1;
                 rd.col = lt.col + region_col_len - 1;
                 rd.row = lt.row + region_row_len - 1;
-                _regions.emplace_back(lt,rd);
+                _regions.emplace_back(make_shared<rectangle_region>(lt,rd));
             }
         /// End
         return arr.size();
@@ -101,13 +101,13 @@ namespace wills::sudoku
     vector<std::shared_ptr<region_t>> classic_board::regions() const noexcept
     {
         vector<std::shared_ptr<region_t>> result;
-        for(rectangle_region rect: _regions){
-            result.push_back(make_shared<rectangle_region>(rect));
+        for(auto rect: _regions){
+            result.push_back(rect);
         }
         return result;
     }
 
-    vector<rectangle_region> classic_board::rect_regions() const noexcept
+    vector<std::shared_ptr<rectangle_region>> classic_board::rect_regions() const noexcept
     {
         return _regions;
     }
@@ -115,25 +115,21 @@ namespace wills::sudoku
     std::shared_ptr<region_t> classic_board::region(const shared_ptr<cell> & pcell) const noexcept
     {
         square_cell * psc = dynamic_cast<square_cell *>(pcell.get());
-        for(auto reg:_regions){
-            if(reg.contains(*psc)){
-                return make_shared<rectangle_region>(reg);
-            }
-        }
-        return nullptr;
+        return region( * psc);
     }
 
-    optional<rectangle_region> classic_board::region(const square_cell &cell) const noexcept
+    shared_ptr<rectangle_region> classic_board::region(const square_cell &cell) const noexcept
     {
         for(auto & reg : _regions){
-            if(reg.contains(cell))return make_optional<rectangle_region>(reg);
+            if(reg->contains(cell))return reg;
         }
-        return std::nullopt;
+        return nullptr;
     }
 
 
     std::shared_ptr<region_t> classic_board::create_region() const noexcept 
     {
+        std::cerr << "Not implemented yet!" << std::endl;
         auto result = std::make_shared<rectangle_region>();
         return result;
     }
