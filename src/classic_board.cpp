@@ -25,12 +25,24 @@ namespace wills::sudoku
 
     cell_value_t classic_board::get(const axis_value_t col, const axis_value_t row) const
     {
-        return cells[coords2index(col, row)];
+        if(check_coords(col,row))
+            return cells[coords2index(col, row)];
+        else return CELL_COORDS_ERROR;
     }
 
     cell_value_t classic_board::get(const coordinate &cords) const
     {
-        return cells[coords2index(cords.col, cords.row)];
+        return get(cords.col,cords.row);
+    }
+
+    void classic_board::set(const coordinate & cords,const cell_value_t val)
+    {
+        if(!check_coords(cords.col,cords.row))
+            throw range_error("set value to a cell with a coordinate out of range");
+        else
+        {
+            cells[coords2index(cords.col,cords.row)] = val;
+        }
     }
 
     size_t classic_board::read(const std::vector<cell_value_t> &arr)
@@ -74,6 +86,17 @@ namespace wills::sudoku
     vector<std::shared_ptr<region_t>> classic_board::regions() const noexcept
     {
         vector<std::shared_ptr<region_t>> result;
+        auto rects = rect_regions();
+        for(rectangle_region rect: rects){
+            result.push_back(make_shared<rectangle_region>(rect));
+        }
+        return result;
+    }
+
+    vector<rectangle_region> classic_board::rect_regions() const noexcept
+    {
+        vector<rectangle_region> result;
+        
         return result;
     }
 
