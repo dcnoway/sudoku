@@ -13,14 +13,9 @@
 #include <list>
 #include <vector>
 #include <memory>
+#include "solver.hpp"
 namespace wills::sudoku
 {
-
-    class solver
-    {
-        public:
-    };
-
     class parser
     {
 

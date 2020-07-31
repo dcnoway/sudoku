@@ -1,26 +1,28 @@
 #include <iostream>
+#include <memory>
 #include "dlx.hpp"
 #include "sudoku.hpp"
 #include "sample_sudoku.hpp"
 #include "classic_board.hpp"
+#include "classic_solver.hpp"
 using namespace std;
 using namespace wills;
 using namespace wills::sudoku;
+
 int main(int argc, char const *argv[])
 {
-    dlx::dancing_links<unsigned> dlx;
-    cout << sizeof(int)<<','<<sizeof(short)<<endl;
-    classic_board board;
+    // dlx::dancing_links<unsigned> dlx;
+    auto p_board = std::make_shared<classic_board>();
+
     vector<wills::sudoku::cell_value_t> 
         v(sudoku1,sudoku1 + sizeof(sudoku1) /sizeof(unsigned));
-    board.read(v);
-    cout << board;
+    p_board->read(v);
+    cout << *p_board;
 
-    rectangle_region rect;
-    coordinate zero{0,0};
-    coordinate one{1,1};
-    coordinate two{2,2};
-    auto cell11 = make_shared<square_cell>(one);
-    auto cell22 = make_shared<square_cell>(two); 
+    classic_solver solver;
+    classic_board * p_answer = dynamic_cast<classic_board *>(solver.solve(p_board).get());
+    if(p_answer != nullptr)
+        cout << * p_answer;
+
     return 0;
 }
