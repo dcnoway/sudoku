@@ -204,7 +204,8 @@ namespace wills::sudoku
     private:
         axis_value_t col_size = 0;      //<! the amount size of current board columns
         axis_value_t row_size = 0;      //<! the amount size of current board rows
-        vector<cell_value_t> cells;     //!< cells array
+        rectangle_region _shape;
+        vector<cell_value_t> _cells;     //!< cells array
         vector<std::shared_ptr<rectangle_region>> _regions;
 
     protected:
@@ -250,7 +251,7 @@ namespace wills::sudoku
          * @brief 
          * 
          */
-        classic_board(/* args */) : board(), cells()
+        classic_board(/* args */) : board(), _cells()
         {
         }
         /**
@@ -269,6 +270,12 @@ namespace wills::sudoku
          * @return ostream& 
          */
         friend ostream &operator<<(ostream &os, const classic_board &v);
+
+        std::vector<std::shared_ptr<cell>> cells() const noexcept override;
+
+        const std::shared_ptr<region_t> get_shape() const noexcept override;
+
+        rectangle_region shape() const noexcept;
 
         /**
          * @brief read SQUARE sudoku data from a vector<int>
@@ -339,7 +346,7 @@ namespace wills::sudoku
          * 
          * @return std::shared_ptr<region_t> 
          */
-        std::shared_ptr<region_t> create_region() const noexcept override;
+        std::shared_ptr<region_t> create_subregion() const noexcept override;
     };
 } // namespace wills::sudoku
 #endif

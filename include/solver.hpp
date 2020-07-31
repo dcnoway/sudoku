@@ -17,11 +17,26 @@
 using namespace std;
 namespace wills::sudoku
 {
+    /**
+     * @brief abstract class, like a interface
+     * 
+     */
     class solver
     {
         public:
+        /**
+         * @brief Get the name object
+         * 
+         * @return string 
+         */
         virtual string get_name() const noexcept = 0;
-        virtual shared_ptr<board> solve(shared_ptr<board>)const =0;
+        /**
+         * @brief solve 
+         * 
+         * @param board a unsolved sudoku board
+         * @return shared_ptr<board> 
+         */
+        virtual shared_ptr<board> solve(shared_ptr<board> board)const =0;
     };
 }
 

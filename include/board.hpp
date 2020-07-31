@@ -107,15 +107,9 @@ namespace wills::sudoku{
         /* data */
     protected:
     public:
-        /**
-         * @brief Construct a new board object
-         */
-        board()=default;
+        virtual std::vector<std::shared_ptr<cell>> cells() const noexcept = 0;
 
-        /**
-         * @brief Destroy the board object
-         */
-        ~board() = default;
+        virtual const std::shared_ptr<region_t> get_shape() const noexcept = 0;
 
         /**
          * @brief Get all regions instance belongs to this board
@@ -137,7 +131,7 @@ namespace wills::sudoku{
          * 
          * @return std::shared_ptr<region_t> 
          */
-        virtual std::shared_ptr<region_t> create_region() const noexcept = 0;
+        virtual std::shared_ptr<region_t> create_subregion() const noexcept = 0;
     };
     
 }

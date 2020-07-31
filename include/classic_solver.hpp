@@ -1,11 +1,11 @@
 /**
  * @file classic_solver.hpp
- * @author your name (you@domain.com)
- * @brief 
+ * @author Will Wu (willswu@outlook.com)
+ * @brief classic sudoku solver(dancing link matrix builder and result parser)
  * @version 0.1
  * @date 2020-07-31
  * 
- * @copyright Copyright (c) 2020
+ * @copyright MIT License
  * 
  */
 
@@ -18,13 +18,29 @@
 using namespace std;
 namespace wills::sudoku
 {
+    /**
+     * @brief classic sudoku solver
+     * 
+     */
     class classic_solver:public solver
     {
         public:
+        /**
+         * @brief Get the name object
+         * 
+         * @return string 
+         */
         string get_name() const noexcept override{
             return "classic";
         }
-        shared_ptr<board> solve(shared_ptr<board>)const override;
+
+        /**
+         * @brief sove sudoku
+         * 
+         * @param board An unsolved sudoku board
+         * @return shared_ptr<board> solved sudoku board
+         */
+        shared_ptr<board> solve(shared_ptr<board> board)const override;
     };
 }
 

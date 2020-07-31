@@ -26,7 +26,7 @@ namespace wills::sudoku
     cell_value_t classic_board::get(const axis_value_t col, const axis_value_t row) const
     {
         if(check_coords(col,row))
-            return cells[coords2index(col, row)];
+            return _cells[coords2index(col, row)];
         else return CELL_COORDS_ERROR;
     }
 
@@ -41,7 +41,7 @@ namespace wills::sudoku
             throw range_error("set value to a cell with a coordinate out of range");
         else
         {
-            cells[coords2index(cords.col,cords.row)] = val;
+            _cells[coords2index(cords.col,cords.row)] = val;
         }
     }
 
@@ -79,7 +79,7 @@ namespace wills::sudoku
             return 0;
             break;
         }
-        cells = arr;
+        _cells = arr;
 
         /// Begin process rectangle regions
         size_t region_col_cnt = col_size / region_col_len;
@@ -127,17 +127,33 @@ namespace wills::sudoku
     }
 
 
-    std::shared_ptr<region_t> classic_board::create_region() const noexcept 
+    std::shared_ptr<region_t> classic_board::create_subregion() const noexcept 
     {
         std::cerr << "Not implemented yet!" << std::endl;
         auto result = std::make_shared<rectangle_region>();
         return result;
     }
 
-    ostream &operator <<(ostream& os, const classic_board & v)
+    std::vector<std::shared_ptr<cell>> classic_board::cells() const noexcept
     {
-        for(int i = 0; i< v.cells.size(); ++i){
-            os << v.cells[i] ;
+        cerr << "Not implemented yet" <<endl;
+        return vector<shared_ptr<cell>>();
+    }
+
+    const std::shared_ptr<region_t> classic_board::get_shape() const noexcept
+    {
+        return make_shared<rectangle_region>(_shape);
+    }
+
+    rectangle_region classic_board::shape() const noexcept
+    {
+        return _shape;
+    }
+
+    ostream &operator<<(ostream &os, const classic_board &v)
+    {
+        for(int i = 0; i< v._cells.size(); ++i){
+            os << v._cells[i] ;
             if( i % v.col_size == v.col_size -1)
                 os << endl;
             else os << ',';
