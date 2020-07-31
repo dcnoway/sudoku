@@ -52,7 +52,17 @@ namespace wills::sudoku
         axis_value_t col; //!< column
         axis_value_t row; //!< row
         public:
+        /**
+         * @brief Construct a new coordinate object
+         * 
+         */
         coordinate():col(0),row(0){};
+        /**
+         * @brief Construct a new coordinate object
+         * 
+         * @param acol 
+         * @param arow 
+         */
         coordinate(axis_value_t acol,axis_value_t arow):col(acol),row(arow){};
     };
 
@@ -100,12 +110,23 @@ namespace wills::sudoku
         {
         }
 
+        /**
+         * @brief Copy constructor
+         * 
+         * @param obj 
+         */
         rectangle_region(const rectangle_region & obj)noexcept
         {
             a = obj.a;
             b = obj.b;
         }
 
+        /**
+         * @brief Copy operator
+         * 
+         * @param obj 
+         * @return const rectangle_region& 
+         */
         const rectangle_region& operator=(const rectangle_region & obj)noexcept
         {
             a = obj.a;
