@@ -8,3 +8,7 @@ target_link_libraries(testdlx PRIVATE Catch2::Catch2 sudoku_solver)
 include(Catch)
 catch_discover_tests(testdlx)
 # catch_discover_tests(testdlxprot)
+
+add_executable(testboard test_board.cpp)
+target_link_libraries(testboard PRIVATE Catch2::Catch2 sudoku_board)
+catch_discover_tests(testboard)

@@ -33,7 +33,7 @@ namespace wills::sudoku
         return cells[coords2index(cords.col, cords.row)];
     }
 
-    size_t classic_board::read(const std::vector<int> &arr)
+    size_t classic_board::read(const std::vector<cell_value_t> &arr)
     {
         size_t region_col_len = 0;
         size_t region_row_len = 0;
@@ -71,15 +71,33 @@ namespace wills::sudoku
         return arr.size();
     }
 
-    vector<region_t> classic_board::regions() const noexcept
+    vector<std::shared_ptr<region_t>> classic_board::regions() const noexcept
     {
-        vector<region_t> result;
+        vector<std::shared_ptr<region_t>> result;
         return result;
     }
 
-    std::shared_ptr<region_t> classic_board::region(const coordinate &cords) const noexcept
+    std::shared_ptr<region_t> classic_board::region(const cell& pcell) const noexcept
     {
         auto result = std::make_shared<rectangle_region>();
         return result;
     }
+
+    std::shared_ptr<region_t> classic_board::create_region() const noexcept 
+    {
+        auto result = std::make_shared<rectangle_region>();
+        return result;
+    }
+
+    ostream &operator <<(ostream& os, const classic_board & v)
+    {
+        for(int i = 0; i< v.cells.size(); ++i){
+            os << v.cells[i] ;
+            if( i % v.col_size == v.col_size -1)
+                os << endl;
+            else os << ',';
+        }
+        return os;
+    }
+
 } // namespace wills::sudoku

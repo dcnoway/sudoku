@@ -14,43 +14,78 @@
  */
 
 namespace wills::sudoku{
-    /**
-     * @brief the type of cell value
-     * 
-     * classic sudoku cell is just 1-digital, from 1 to 9.
-     * Because int type is the fastest data type on the CPU and system bus,
-     * and there is no obvious memory pressre for just board representing,
-     * further more, we reserve 0(ZERO) as the blank cell,
-     * reserve negative value for future use,
-     * hereby int was choosed as the type of cell value.
-     */
-    using cell_value_t = int;
 
-    /**
-     * @brief the type of cell coordinate factor, ZERO is reserved for internal use
-     * 
-     */
-    using axis_value_t = unsigned;
-
-    /**
-     * @brief coordinate of sudoku board cells
-     * 
-     */
-    struct coordinate
+    class cell
     {
-        axis_value_t col =0; //!< column 
-        axis_value_t row =0; //!< row
+        public:
+        virtual ~cell()=default;
     };
 
+
     /**
-     * @brief interface region
+     * @brief abstract region
      * 
+     * A region wrapper for both vector implemented board and sub graph in graph implemented board
+     * NOTICE:This is a abstract class implemented interface, for runtime dynamic adaptive
      */
     class region_t
     {
+        protected:
+        /**
+         * @brief A weak pointer to the board which this region belongs to
+         * 
+         */
+        std::weak_ptr<region_t> _parent;
         public:
-        virtual bool contains(const coordinate & cell) const noexcept = 0;
-        virtual std::vector<coordinate> cells() const noexcept= 0;
+        virtual ~region_t() = default;
+        /**
+         * @brief check if this region contains the cell with given coordiante or not
+         * 
+         * NOTICE:This is a pure virtual function, must implemented in derived class
+         * @param a_cell cell
+         * @return true this region contains the given cell
+         * @return false this region does NOT contain the given cell
+         */
+        virtual bool contains(const std::shared_ptr<cell> a_cell) const noexcept = 0;
+
+        /**
+         * @brief check if this region contains a sub region
+         * 
+         * NOTICE:This is a pure virtual function, must implemented in derived class
+         * @param sub pointer to sub region
+         * @return true 
+         * @return false 
+         */
+        // virtual bool contains(const std::shared_ptr<region_t> sub) const noexcept= 0;
+
+        /**
+         * @brief get all cell coordinates within this region
+         * 
+         * NOTICE:This is a pure virtual function, must implemented in derived class
+         * @return std::vector<coordinate> A vector contains all the cell coordinates within this region
+         */
+        virtual std::vector<std::shared_ptr<cell>> cells() const noexcept= 0;
+
+        /**
+         * @brief Get the parent object
+         * 
+         * @return std::shared_ptr<region_t> 
+         */
+        std::shared_ptr<region_t> get_parent() const noexcept
+        {
+            return _parent.lock();
+        }
+
+        /**
+         * @brief Is this region the root element in regin tree
+         * 
+         * @return true 
+         * @return false 
+         */
+        bool is_root() const noexcept{
+            return (_parent.lock() == nullptr);
+        }
+
     };
     
 
@@ -58,21 +93,43 @@ namespace wills::sudoku{
      * @brief sudoku board representation base class
      * 
      */
-    class board
+    class board 
     {
     private:
         /* data */
+    protected:
     public:
-        board(){}
-        ~board(){}
-        virtual std::vector<region_t> regions() const noexcept = 0;
-        // {
-        //     return std::vector<region_t>();
-        // }
-        virtual std::shared_ptr<region_t> region(const coordinate & cords) const noexcept = 0;
-        // {
-        //     return std::nullopt;
-        // }
+        /**
+         * @brief Construct a new board object
+         */
+        board()=default;
+
+        /**
+         * @brief Destroy the board object
+         */
+        ~board() = default;
+
+        /**
+         * @brief Get all regions instance belongs to this board
+         * 
+         * @return std::vector<std::shared_ptr<region_t>>
+         */
+        virtual std::vector<std::shared_ptr<region_t>> regions() const noexcept = 0;
+
+        /**
+         * @brief Get a region which the given cell is within
+         * 
+         * @param acell A cell  
+         * @return std::shared_ptr<region_t> 
+         */
+        virtual std::shared_ptr<region_t> region(const cell & acell) const noexcept = 0;
+
+        /**
+         * @brief Create a sub region object
+         * 
+         * @return std::shared_ptr<region_t> 
+         */
+        virtual std::shared_ptr<region_t> create_region() const noexcept = 0;
     };
     
 }

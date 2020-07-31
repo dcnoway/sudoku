@@ -9,11 +9,13 @@ SET(CMAKE_CXX_STANDARD 20)
 SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 
 INCLUDE_DIRECTORIES(include)
-SET(LIB_SRC_LIST src/sudoku.cpp src/classic_board.cpp)
+SET(LIB_SRC_LIST src/sudoku.cpp)
 ADD_LIBRARY(sudoku_solver STATIC ${LIB_SRC_LIST})
 
+ADD_LIBRARY(sudoku_board STATIC  src/classic_board.cpp)
+
 ADD_EXECUTABLE(sudoku src/main.cpp)
-TARGET_LINK_LIBRARIES(sudoku sudoku_solver)
+TARGET_LINK_LIBRARIES(sudoku sudoku_solver sudoku_board)
 
 #################################################
 # CXX unit test segement

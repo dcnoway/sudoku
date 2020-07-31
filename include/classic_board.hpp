@@ -17,26 +17,127 @@
 #include "board.hpp"
 namespace wills::sudoku{
     using namespace std;
+
+    /**
+     * @brief the type of cell value
+     * 
+     * classic sudoku cell is just 1-digital, from 1 to 9.
+     * Because int type is the fastest data type on the CPU and system bus,
+     * and there is no obvious memory pressre for just board representing,
+     * further more, we reserve 0(ZERO) as the blank cell,
+     * reserve negative value for future use,
+     * hereby int was choosed as the type of cell value.
+     */
+    using cell_value_t = int;
+
+    /**
+     * @brief the type of cell coordinate factor, ZERO is reserved for internal use
+     * 
+     */
+    using axis_value_t = unsigned;
+
+    /**
+     * @brief coordinate of sudoku board cells
+     * 
+     */
+    struct coordinate
+    {
+        axis_value_t col =0; //!< column 
+        axis_value_t row =0; //!< row
+    };
+
+    /**
+     * @brief classic square cell
+     * 
+     */
+    class square_cell : public cell,public coordinate{
+        public:
+        square_cell():cell(),coordinate(){}
+        square_cell(const coordinate & cds):cell(),coordinate(cds){}
+        ~square_cell(){};
+    };
+    
+    /**
+     * @brief rectangle region for classic sudoku
+     * 
+     */
     class rectangle_region:public region_t{
         protected:
-        coordinate a,b;
+        coordinate a;   //!< a and b is two diagonal vertex of the rectangle
+        coordinate b;   //!< a and b is two diagonal vertex of the rectangle
+
         public:
+        /**
+         * @brief Construct a new rectangle region object
+         */
         rectangle_region():a(),b(){};
+        /**
+         * @brief Construct a new rectangle region object
+         * 
+         * @param aval one vertex of the rectangle
+         * @param bval another vertex of the rectangle
+         */
         rectangle_region(const coordinate & aval, const coordinate & bval):a(aval),b(bval)
         {
         }
+
+        /**
+         * @brief Destroy the rectangle region object
+         */
+        virtual ~rectangle_region() = default;
+
+        /**
+         * @brief set the vertex coordinates
+         * 
+         * @param left_up 
+         * @param right_down 
+         */
         void set(const coordinate &left_up,const coordinate & right_down)
         {
             a = left_up;
             b = right_down;
         }
-        bool contains(const coordinate & cell) const noexcept override{
-            return false;
+
+        /**
+         * @brief check this region contains the cell
+         * 
+         * @param acell a cell
+         * @return true this region contains the given cell
+         * @return false this region does NOT contain the given cell
+         */
+        bool contains(const std::shared_ptr<cell> acell) const noexcept override{
+            square_cell * pcell = dynamic_cast<square_cell *>(acell.get());
+            if(pcell)return contains(*pcell);
+            else return false;
         }
-        std::vector<coordinate> cells() const noexcept override{
-            return vector<coordinate>();
+
+        /**
+         * @brief check this rectangle_region contains the square_cell with given coordiante or not
+         * 
+         * @param acell 
+         * @return true 
+         * @return false 
+         */
+        bool contains(const square_cell &acell) const noexcept
+        {
+            return ((acell.col >= std::min(a.col, b.col)) &&
+                    (acell.col <= std::max(a.col, b.col)) &&
+                    (acell.row >= std::min(a.row, b.row)) &&
+                    (acell.row <= std::max(a.row, b.row)));
+        }
+
+        /**
+         * @brief get all cordinates within this region
+         * 
+         * @return std::vector<coordinate> A vector contains all the cell coordinate within this region
+         */
+        std::vector<std::shared_ptr<cell>> cells() const noexcept override{
+            //TODO: Implement this
+            std::cerr<<"Not implemented yet!" <<std::endl;
+            return std::vector<std::shared_ptr<cell>>();
         }
     };
+
     /**
      * @brief classic sudoku board
      * 
@@ -48,23 +149,33 @@ namespace wills::sudoku{
         axis_value_t row_size = 0;
         vector<cell_value_t> cells;
     protected:
+        inline size_t coords2index(const axis_value_t col, const axis_value_t row)const noexcept;
+        inline coordinate index2coords(const size_t cell_idx)const noexcept;
+        inline coordinate coords2region(const axis_value_t col, const axis_value_t row)const noexcept;
+    public:
+        /**
+         * @brief 
+         * 
+         */
+        classic_board(/* args */):board(),cells(){
+        }
+        /**
+         * @brief Destroy the classic board object
+         * 
+         */
+        ~classic_board(){
+
+        }
+        // friend istream & operator >>(istream & is, classic_board & obj);
+        friend ostream &operator <<(ostream& os, const classic_board & v);
+
         /**
          * @brief read SQUARE sudoku data from a vector<int>
          * 
          * @param arr contains all cell values, row by row, no seperate symbol
          * @return size_t counter of readed cells, ZERO for fail
          */
-        size_t read(const std::vector<int> & arr);
-        inline size_t coords2index(const axis_value_t col, const axis_value_t row)const noexcept;
-        inline coordinate index2coords(const size_t cell_idx)const noexcept;
-        inline coordinate coords2region(const axis_value_t col, const axis_value_t row)const noexcept;
-    public:
-        classic_board(/* args */):board(),cells(){
-        }
-        ~classic_board(){
-
-        }
-        // friend istream & operator >>(istream & is, classic_board & obj);
+        size_t read(const std::vector<cell_value_t> & arr);
 
         /**
          * @brief get the cell value by the given coordinate
@@ -97,7 +208,7 @@ namespace wills::sudoku{
          * Implements the abstract function of base class board
          * @return vector<region_t> 
          */
-        vector<region_t> regions() const noexcept override;
+        std::vector<std::shared_ptr<region_t>> regions() const noexcept override;
 
         /**
          * @brief get the region of the given cell coordinate
@@ -105,7 +216,14 @@ namespace wills::sudoku{
          * @param cords coordinate of the cell
          * @return region_t a region which contains the cell
          */
-        std::shared_ptr<region_t> region(const coordinate & cords) const noexcept override;
+        std::shared_ptr<region_t> region(const cell & cords) const noexcept override;
+
+        /**
+         * @brief Create a subregion object
+         * 
+         * @return std::shared_ptr<region_t> 
+         */
+        std::shared_ptr<region_t> create_region() const noexcept override;
     };
 }
 #endif
