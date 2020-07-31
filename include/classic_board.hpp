@@ -31,15 +31,12 @@ namespace wills::sudoku
      */
     using cell_value_t = int;
 
-    /**
-     * @brief some predefined const
-     * 
-     */
-    constexpr int CELL_COORDS_ERROR = -0xFFFFFF;
-    constexpr int CELL_BLANK = 0;
-    constexpr int CELL_EDGE = -1;
-    constexpr int BOARD_LINE = -10;
-    constexpr int BOARD_LINE_THIN = -11;
+    constexpr int CELL_COORDS_ERROR = -0xFFFFFF;        //!< indicates that call function with a wrong cell coords
+    constexpr int CELL_BLANK = 0;                       //!< indicates a blank cell, which need to be fill a number
+    constexpr int CELL_EDGE = -1;                       //!< indicates a board edge, reserved for internal algorithms
+    constexpr int BOARD_LINE = -10;                     //!< indicates a common board line
+    constexpr int BOARD_LINE_THIN = -11;                //!< indicates a thin board line
+
     /**
      * @brief the type of cell coordinate factor, ZERO is reserved for internal use
      * 
@@ -64,6 +61,11 @@ namespace wills::sudoku
     {
     public:
         square_cell() : cell(), coordinate() {}
+        /**
+         * @brief Construct a new square cell object
+         * 
+         * @param cds 
+         */
         square_cell(const coordinate &cds) : cell(), coordinate(cds) {}
         ~square_cell(){};
     };
@@ -161,14 +163,44 @@ namespace wills::sudoku
     class classic_board : public board
     {
     private:
-        axis_value_t col_size = 0;
-        axis_value_t row_size = 0;
-        vector<cell_value_t> cells;
+        axis_value_t col_size = 0;      //<! the amount size of current board columns
+        axis_value_t row_size = 0;      //<! the amount size of current board rows
+        vector<cell_value_t> cells;     //!< cells array
+        vector<rectangle_region> _regions;
 
     protected:
+        /**
+         * @brief convert cell coords to the cell array element index
+         * 
+         * @param col 
+         * @param row 
+         * @return size_t 
+         */
         inline size_t coords2index(const axis_value_t col, const axis_value_t row) const noexcept;
+        /**
+         * @brief convert element index for the cell to a coordinate
+         * 
+         * @param cell_idx 
+         * @return coordinate 
+         */
         inline coordinate index2coords(const size_t cell_idx) const noexcept;
+        /**
+         * @brief convert cell coords to the coords of region that contains the cell
+         * 
+         * @param col 
+         * @param row 
+         * @return coordinate 
+         */
         inline coordinate coords2region(const axis_value_t col, const axis_value_t row) const noexcept;
+
+        /**
+         * @brief check coords validaties
+         * 
+         * @param col 
+         * @param row 
+         * @return true 
+         * @return false 
+         */
         inline bool check_coords(const axis_value_t col, const axis_value_t row) const noexcept
         {
             return ((col > 0) && (row > 0) && (col <= col_size) && (row <= row_size));
@@ -190,6 +222,13 @@ namespace wills::sudoku
         {
         }
         // friend istream & operator >>(istream & is, classic_board & obj);
+        /**
+         * @brief stream out the classic_board
+         * 
+         * @param os 
+         * @param v 
+         * @return ostream& 
+         */
         friend ostream &operator<<(ostream &os, const classic_board &v);
 
         /**
@@ -233,15 +272,28 @@ namespace wills::sudoku
          */
         std::vector<std::shared_ptr<region_t>> regions() const noexcept override;
 
+        /**
+         * @brief get all rectangle_regions in the loaded classic_board instance
+         * 
+         * @return vector<rectangle_region> 
+         */
         vector<rectangle_region> rect_regions() const noexcept;
 
         /**
          * @brief get the region of the given cell coordinate
          * 
-         * @param acell a cell
+         * @param pcell a cell
          * @return std::shared_ptr<region_t> a region which contains the cell
          */
-        std::shared_ptr<region_t> region(const cell &acell) const noexcept override;
+        std::shared_ptr<region_t> region(const shared_ptr<cell> &pcell) const noexcept override;
+
+        /**
+         * @brief 
+         * 
+         * @param cell 
+         * @return const rectangle_region& 
+         */
+        optional<rectangle_region> region(const square_cell &cell) const noexcept;
 
         /**
          * @brief Create a subregion object

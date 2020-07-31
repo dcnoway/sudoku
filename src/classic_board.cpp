@@ -80,14 +80,28 @@ namespace wills::sudoku
             break;
         }
         cells = arr;
+
+        /// Begin process rectangle regions
+        size_t region_col_cnt = col_size / region_col_len;
+        size_t region_row_cnt = row_size / region_row_len;
+
+        for(size_t rx = 1; rx <= region_col_cnt;++rx)
+            for(size_t ry = 1; ry <= region_row_cnt;++ry){
+                coordinate lt,rd;
+                lt.col = (rx -1)*region_col_len + 1;
+                lt.row = (ry -1)*region_row_len + 1;
+                rd.col = lt.col + region_col_len - 1;
+                rd.row = lt.row + region_row_len - 1;
+                _regions.emplace_back(lt,rd);
+            }
+        /// End
         return arr.size();
     }
 
     vector<std::shared_ptr<region_t>> classic_board::regions() const noexcept
     {
         vector<std::shared_ptr<region_t>> result;
-        auto rects = rect_regions();
-        for(rectangle_region rect: rects){
+        for(rectangle_region rect: _regions){
             result.push_back(make_shared<rectangle_region>(rect));
         }
         return result;
@@ -95,16 +109,28 @@ namespace wills::sudoku
 
     vector<rectangle_region> classic_board::rect_regions() const noexcept
     {
-        vector<rectangle_region> result;
-        
-        return result;
+        return _regions;
     }
 
-    std::shared_ptr<region_t> classic_board::region(const cell& pcell) const noexcept
+    std::shared_ptr<region_t> classic_board::region(const shared_ptr<cell> & pcell) const noexcept
     {
-        auto result = std::make_shared<rectangle_region>();
-        return result;
+        square_cell * psc = dynamic_cast<square_cell *>(pcell.get());
+        for(auto reg:_regions){
+            if(reg.contains(*psc)){
+                return make_shared<rectangle_region>(reg);
+            }
+        }
+        return nullptr;
     }
+
+    optional<rectangle_region> classic_board::region(const square_cell &cell) const noexcept
+    {
+        for(auto & reg : _regions){
+            if(reg.contains(cell))return make_optional<rectangle_region>(reg);
+        }
+        return std::nullopt;
+    }
+
 
     std::shared_ptr<region_t> classic_board::create_region() const noexcept 
     {

@@ -157,5 +157,74 @@ TEST_CASE("classic_board regions() check", "[classic_board]")
 
     shared_ptr<cell> pcell11 = std::make_shared<square_cell>(coordinate{1,1});
     REQUIRE(regions[0]->contains(pcell11));
-    REQUIRE_FALSE(regions[1]->contains(pcell11));
+    for(int i = 1;i<regions.size();++i){
+        REQUIRE_FALSE(regions[i]->contains(pcell11));
+    }
+
+    shared_ptr<cell> pcell99 = std::make_shared<square_cell>(coordinate{9,9});
+    REQUIRE(regions[8]->contains(pcell99));
+    for(int i = 0;i<regions.size() - 1;++i){
+        REQUIRE_FALSE(regions[i]->contains(pcell99));
+    }
+}
+
+TEST_CASE("classic_board regions() boundary check", "[classic_board]")
+{
+    classic_board board;
+
+    vector<wills::sudoku::cell_value_t>
+        v(sudoku1, sudoku1 + sizeof(sudoku1) / sizeof(unsigned));
+    board.read(v);
+    auto regions = board.regions();
+    REQUIRE(regions.size() == 9);
+
+    shared_ptr<cell> pcell00 = std::make_shared<square_cell>(coordinate{0,0});
+    for(int i = 0;i<regions.size();++i){
+        REQUIRE_FALSE(regions[i]->contains(pcell00));
+    }
+
+    shared_ptr<cell> pcellxx = std::make_shared<square_cell>(coordinate{10,10});
+    for(int i = 0;i<regions.size();++i){
+        REQUIRE_FALSE(regions[i]->contains(pcellxx));
+    }
+}
+
+TEST_CASE("classic_board region() check", "[classic_board]")
+{
+    classic_board board;
+
+    vector<wills::sudoku::cell_value_t>
+        v(sudoku1, sudoku1 + sizeof(sudoku1) / sizeof(unsigned));
+    board.read(v);
+    auto regions = board.regions();
+    REQUIRE(regions.size() == 9);
+
+    shared_ptr<cell> pcell00 = std::make_shared<square_cell>(coordinate{0,0});
+    std::shared_ptr<region_t> preg;
+    REQUIRE_NOTHROW(preg = board.region(pcell00));
+    REQUIRE(preg == nullptr);
+
+    shared_ptr<cell> pcellxx = std::make_shared<square_cell>(coordinate{10,10});
+    REQUIRE_NOTHROW(preg = board.region(pcellxx));
+    REQUIRE(preg == nullptr);
+
+    std::shared_ptr<region_t> preg11,preg33,preg44,preg99;
+    shared_ptr<cell> pcell11 = std::make_shared<square_cell>(coordinate{1,1});
+    shared_ptr<cell> pcell33 = std::make_shared<square_cell>(coordinate{3,3});
+    shared_ptr<cell> pcell44 = std::make_shared<square_cell>(coordinate{4,4});
+    shared_ptr<cell> pcell99 = std::make_shared<square_cell>(coordinate{9,9});
+    REQUIRE_NOTHROW(preg11 = board.region(pcell11));
+    REQUIRE_NOTHROW(preg33 = board.region(pcell33));
+    REQUIRE_NOTHROW(preg44 = board.region(pcell44));
+    REQUIRE_NOTHROW(preg99 = board.region(pcell99));
+    REQUIRE(preg11 != nullptr);
+    REQUIRE(preg33 != nullptr);
+    REQUIRE(preg44 != nullptr);
+    REQUIRE(preg99 != nullptr);
+    REQUIRE(((preg11 != preg44)&&(preg44 != preg99)));
+    REQUIRE(preg11->contains(pcell11));
+    REQUIRE(preg11->contains(pcell33));
+    REQUIRE(preg44->contains(pcell44));
+    REQUIRE(preg99->contains(pcell99));
+    REQUIRE(preg11 == preg33);
 }

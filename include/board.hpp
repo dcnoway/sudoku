@@ -15,9 +15,17 @@
 
 namespace wills::sudoku{
 
+    /**
+     * @brief abstract class for dynamic processing both classic and variant sudoku
+     * 
+     */
     class cell
     {
         public:
+        /**
+         * @brief Destroy the cell object
+         * 
+         */
         virtual ~cell()=default;
     };
 
@@ -119,10 +127,10 @@ namespace wills::sudoku{
         /**
          * @brief Get a region which the given cell is within
          * 
-         * @param acell A cell  
+         * @param pcell A shared_ptr to the cell for dynamic
          * @return std::shared_ptr<region_t> 
          */
-        virtual std::shared_ptr<region_t> region(const cell & acell) const noexcept = 0;
+        virtual std::shared_ptr<region_t> region(const std::shared_ptr<cell> & pcell) const noexcept = 0;
 
         /**
          * @brief Create a sub region object
