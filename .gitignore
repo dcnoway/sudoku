@@ -1,5 +1,7 @@
 bin/*
 !bin/placeholder
+out/*
+!out/placeholder
 build/
 docs/
 # Prerequisites

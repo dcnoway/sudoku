@@ -107,8 +107,18 @@ namespace wills::sudoku{
         /* data */
     protected:
     public:
+        /**
+         * @brief get all cells
+         * 
+         * @return std::vector<std::shared_ptr<cell>> 
+         */
         virtual std::vector<std::shared_ptr<cell>> cells() const noexcept = 0;
 
+        /**
+         * @brief Get the shape of board, using a region data struct
+         * 
+         * @return const std::shared_ptr<region_t> 
+         */
         virtual const std::shared_ptr<region_t> get_shape() const noexcept = 0;
 
         /**

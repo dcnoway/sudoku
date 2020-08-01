@@ -271,10 +271,25 @@ namespace wills::sudoku
          */
         friend ostream &operator<<(ostream &os, const classic_board &v);
 
+        /**
+         * @brief override, get all cells
+         * 
+         * @return std::vector<std::shared_ptr<cell>> 
+         */
         std::vector<std::shared_ptr<cell>> cells() const noexcept override;
 
+        /**
+         * @brief Override Get the shape of board
+         * 
+         * @return const std::shared_ptr<region_t> 
+         */
         const std::shared_ptr<region_t> get_shape() const noexcept override;
 
+        /**
+         * @brief Helpper function Get the shape of board
+         * 
+         * @return rectangle_region 
+         */
         rectangle_region shape() const noexcept;
 
         /**
