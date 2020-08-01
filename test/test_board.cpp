@@ -7,41 +7,173 @@ using namespace wills::sudoku;
 
 TEST_CASE("rectangle_region check", "[classic_board]")
 {
-    coordinate zero{0, 0};
-    coordinate one{1, 1};
-    coordinate two{2, 2};
-    auto cell0 = make_shared<square_cell>(zero);
-    auto cell11 = make_shared<square_cell>(one);
-    auto cell22 = make_shared<square_cell>(two);
+    //All boundary of left top, 9 cells
+    auto cell00 = make_shared<square_cell>(coordinate{0, 0});
+    auto cell01 = make_shared<square_cell>(coordinate{0, 1});
+    auto cell02 = make_shared<square_cell>(coordinate{0, 2});
+    auto cell10 = make_shared<square_cell>(coordinate{1, 0});
+    auto cell11 = make_shared<square_cell>(coordinate{1, 1});
+    auto cell12 = make_shared<square_cell>(coordinate{1, 2});
+    auto cell20 = make_shared<square_cell>(coordinate{2, 0});
+    auto cell21 = make_shared<square_cell>(coordinate{2, 1});
+    auto cell22 = make_shared<square_cell>(coordinate{2, 2});
 
+    //All boundary of right down, 9 cells
     auto cell55 = make_shared<square_cell>(coordinate{5, 5});
+    auto cell56 = make_shared<square_cell>(coordinate{5, 6});
+    auto cell57 = make_shared<square_cell>(coordinate{5, 7});
+    auto cell65 = make_shared<square_cell>(coordinate{6, 5});
     auto cell66 = make_shared<square_cell>(coordinate{6, 6});
+    auto cell67 = make_shared<square_cell>(coordinate{6, 7});
+    auto cell75 = make_shared<square_cell>(coordinate{7, 5});
+    auto cell76 = make_shared<square_cell>(coordinate{7, 6});
     auto cell77 = make_shared<square_cell>(coordinate{7, 7});
 
+    //All boundary of left down, 9 cells
+    auto cell05 = make_shared<square_cell>(coordinate{0, 5});
+    auto cell06 = make_shared<square_cell>(coordinate{0, 6});
+    auto cell07 = make_shared<square_cell>(coordinate{0, 7});
+    auto cell15 = make_shared<square_cell>(coordinate{1, 5});
+    auto cell16 = make_shared<square_cell>(coordinate{1, 6});
+    auto cell17 = make_shared<square_cell>(coordinate{1, 7});
+    auto cell25 = make_shared<square_cell>(coordinate{2, 5});
+    auto cell26 = make_shared<square_cell>(coordinate{2, 6});
+    auto cell27 = make_shared<square_cell>(coordinate{2, 7});
+
+    //All boundary of right top, 9 cells
+    auto cell50 = make_shared<square_cell>(coordinate{5, 0});
+    auto cell51 = make_shared<square_cell>(coordinate{5, 1});
+    auto cell52 = make_shared<square_cell>(coordinate{5, 2});
+    auto cell60 = make_shared<square_cell>(coordinate{6, 0});
+    auto cell61 = make_shared<square_cell>(coordinate{6, 1});
+    auto cell62 = make_shared<square_cell>(coordinate{6, 2});
+    auto cell70 = make_shared<square_cell>(coordinate{7, 0});
+    auto cell71 = make_shared<square_cell>(coordinate{7, 1});
+    auto cell72 = make_shared<square_cell>(coordinate{7, 2});
+
     auto cell99 = make_shared<square_cell>(coordinate{9, 9});
-
     rectangle_region rect;
-    REQUIRE(rect.contains(cell0));
-    REQUIRE_FALSE(rect.contains(cell11));
-    REQUIRE_FALSE(rect.contains(cell22));
 
-    rect.set({1, 1}, {6, 6});
-    REQUIRE_FALSE(rect.contains(cell0));
-    REQUIRE(rect.contains(cell11));
-    REQUIRE(rect.contains(cell22));
-    REQUIRE_FALSE(rect.contains(cell99));
-    REQUIRE(rect.contains(cell55));
-    REQUIRE(rect.contains(cell66));
-    REQUIRE_FALSE(rect.contains(cell77));
+    SECTION("Uninitlized rectangle_region only contains 0,0")
+    {
+        REQUIRE(rect.contains(cell00));
+        REQUIRE_FALSE(rect.contains(cell11));
+        REQUIRE_FALSE(rect.contains(cell22));
+    }
 
-    rect.set({6, 1}, {1, 6});
-    REQUIRE_FALSE(rect.contains(cell0));
-    REQUIRE(rect.contains(cell11));
-    REQUIRE(rect.contains(cell22));
-    REQUIRE_FALSE(rect.contains(cell99));
-    REQUIRE(rect.contains(cell55));
-    REQUIRE(rect.contains(cell66));
-    REQUIRE_FALSE(rect.contains(cell77));
+    SECTION("Init rect region with lefttop and right down")
+    {
+        rect.set({1, 1}, {6, 6});
+        SECTION("Check left top corner")
+        {
+            CHECK_FALSE(rect.contains(cell00));
+            CHECK_FALSE(rect.contains(cell01));
+            CHECK_FALSE(rect.contains(cell02));
+            CHECK_FALSE(rect.contains(cell10));
+            CHECK(rect.contains(cell11));
+            CHECK(rect.contains(cell12));
+            CHECK_FALSE(rect.contains(cell20));
+            CHECK(rect.contains(cell21));
+            CHECK(rect.contains(cell22));
+        }
+        SECTION("Check left down corner")
+        {
+            CHECK_FALSE(rect.contains(cell05));
+            CHECK_FALSE(rect.contains(cell06));
+            CHECK_FALSE(rect.contains(cell07));
+            CHECK(rect.contains(cell15));
+            CHECK(rect.contains(cell16));
+            CHECK_FALSE(rect.contains(cell17));
+            CHECK(rect.contains(cell25));
+            CHECK(rect.contains(cell26));
+            CHECK_FALSE(rect.contains(cell27));
+        }
+        SECTION("Check right down corner")
+        {
+            CHECK(rect.contains(cell55));
+            CHECK(rect.contains(cell56));
+            CHECK_FALSE(rect.contains(cell57));
+            CHECK(rect.contains(cell65));
+            CHECK(rect.contains(cell66));
+            CHECK_FALSE(rect.contains(cell67));
+            CHECK_FALSE(rect.contains(cell75));
+            CHECK_FALSE(rect.contains(cell76));
+            CHECK_FALSE(rect.contains(cell77));
+        }
+        SECTION("Check right top corner")
+        {
+            CHECK_FALSE(rect.contains(cell50));
+            CHECK(rect.contains(cell51));
+            CHECK(rect.contains(cell52));
+            CHECK_FALSE(rect.contains(cell60));
+            CHECK(rect.contains(cell61));
+            CHECK(rect.contains(cell62));
+            CHECK_FALSE(rect.contains(cell70));
+            CHECK_FALSE(rect.contains(cell71));
+            CHECK_FALSE(rect.contains(cell72));
+        }
+        SECTION("Check a cell far from region")
+        {
+            REQUIRE_FALSE(rect.contains(cell99));
+        }
+    }
+
+    SECTION("Init rect region with right top and left down")
+    {
+        rect.set({6, 1}, {1, 6});
+        SECTION("Check left top corner")
+        {
+            CHECK_FALSE(rect.contains(cell00));
+            CHECK_FALSE(rect.contains(cell01));
+            CHECK_FALSE(rect.contains(cell02));
+            CHECK_FALSE(rect.contains(cell10));
+            CHECK(rect.contains(cell11));
+            CHECK(rect.contains(cell12));
+            CHECK_FALSE(rect.contains(cell20));
+            CHECK(rect.contains(cell21));
+            CHECK(rect.contains(cell22));
+        }
+        SECTION("Check left down corner")
+        {
+            CHECK_FALSE(rect.contains(cell05));
+            CHECK_FALSE(rect.contains(cell06));
+            CHECK_FALSE(rect.contains(cell07));
+            CHECK(rect.contains(cell15));
+            CHECK(rect.contains(cell16));
+            CHECK_FALSE(rect.contains(cell17));
+            CHECK(rect.contains(cell25));
+            CHECK(rect.contains(cell26));
+            CHECK_FALSE(rect.contains(cell27));
+        }
+        SECTION("Check right down corner")
+        {
+            CHECK(rect.contains(cell55));
+            CHECK(rect.contains(cell56));
+            CHECK_FALSE(rect.contains(cell57));
+            CHECK(rect.contains(cell65));
+            CHECK(rect.contains(cell66));
+            CHECK_FALSE(rect.contains(cell67));
+            CHECK_FALSE(rect.contains(cell75));
+            CHECK_FALSE(rect.contains(cell76));
+            CHECK_FALSE(rect.contains(cell77));
+        }
+        SECTION("Check right top corner")
+        {
+            CHECK_FALSE(rect.contains(cell50));
+            CHECK(rect.contains(cell51));
+            CHECK(rect.contains(cell52));
+            CHECK_FALSE(rect.contains(cell60));
+            CHECK(rect.contains(cell61));
+            CHECK(rect.contains(cell62));
+            CHECK_FALSE(rect.contains(cell70));
+            CHECK_FALSE(rect.contains(cell71));
+            CHECK_FALSE(rect.contains(cell72));
+        }
+        SECTION("Check a cell far from region")
+        {
+            REQUIRE_FALSE(rect.contains(cell99));
+        }
+    }
 }
 
 TEST_CASE("classic_board read raw data check", "[classic_board]")
