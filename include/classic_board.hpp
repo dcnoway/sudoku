@@ -140,6 +140,26 @@ namespace wills::sudoku
         virtual ~rectangle_region() = default;
 
         /**
+         * @brief col size of the rectangle region
+         * 
+         * @return size_t 
+         */
+        inline size_t colsize()const noexcept{return std::max(a.col,b.col) - std::min(a.col,b.col);}
+        /**
+         * @brief row size of the rectangle region
+         * 
+         * @return size_t 
+         */
+        inline size_t rowsize()const noexcept{return std::max(a.row,b.row) - std::min(a.row,b.row);}
+
+        /**
+         * @brief square cell size in this rectangle region
+         * 
+         * @return size_t 
+         */
+        inline size_t size()const noexcept{return rowsize() * colsize();}
+
+        /**
          * @brief set the vertex coordinates
          * 
          * @param left_up 
@@ -202,13 +222,14 @@ namespace wills::sudoku
     class classic_board : public board
     {
     private:
+        //TODO: remove col_size row_size
         axis_value_t col_size = 0;      //<! the amount size of current board columns
         axis_value_t row_size = 0;      //<! the amount size of current board rows
-        rectangle_region _shape;
+        rectangle_region _shape;        //!< the rect shape of the board
         vector<cell_value_t> _cells;     //!< cells array
         vector<std::shared_ptr<rectangle_region>> _regions;
 
-    protected:
+    public:
         /**
          * @brief convert cell coords to the cell array element index
          * 

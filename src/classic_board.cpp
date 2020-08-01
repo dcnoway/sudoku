@@ -82,6 +82,7 @@ namespace wills::sudoku
         _cells = arr;
 
         /// Begin process rectangle regions
+        _shape.set({1,1},{col_size,row_size});
         size_t region_col_cnt = col_size / region_col_len;
         size_t region_row_cnt = row_size / region_row_len;
 
