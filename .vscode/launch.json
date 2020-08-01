@@ -8,7 +8,7 @@
             "name": "(gdb) Launch",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/bin/sudoku",
+            "program": "${workspaceFolder}/out/sudoku",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
