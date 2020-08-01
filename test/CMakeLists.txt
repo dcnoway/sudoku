@@ -14,5 +14,5 @@ target_link_libraries(testboard PRIVATE Catch2::Catch2 sudoku_board)
 catch_discover_tests(testboard)
 
 add_executable(testsolver test_solver.cpp)
-target_link_libraries(testsolver PRIVATE Catch2::Catch2 sudoku_solver)
+target_link_libraries(testsolver PRIVATE Catch2::Catch2 sudoku_board sudoku_solver)
 catch_discover_tests(testsolver)
