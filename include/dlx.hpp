@@ -307,7 +307,7 @@ namespace wills::dlx
      * @tparam T 
      */
     template <typename T>
-    using result_row_t = typename std::vector<value_t<T>>;
+    using row_t = typename std::vector<value_t<T>>;
 
     /**
      * @brief helper typename alias
@@ -315,7 +315,7 @@ namespace wills::dlx
      * @tparam T 
      */
     template <typename T>
-    using result_t = typename std::vector<result_row_t<T>>;
+    using result_t = typename std::vector<row_t<T>>;
 
     /**
      * @brief A class implemented classical dancing links algorithm
@@ -507,6 +507,11 @@ namespace wills::dlx
             return result;
         }
 
+        size_t append_row(const row_t<T> & row)
+        {
+            return append_row(row.begin(),row.size());
+        }
+
         /**
          * @brief append a row to the end of the dancing links
          * 
@@ -680,7 +685,7 @@ namespace wills::dlx
                 while (row_stack.size() != 0)
                 {
                     auto pnode = row_stack.top();
-                    result_row_t<T> _row;
+                    row_t<T> _row;
                     auto ptr = pnode;
                     do{
                         value_t<T> v;
