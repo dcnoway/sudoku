@@ -1,0 +1,25 @@
+{
+	// See https://go.microsoft.com/fwlink/?LinkId=827846 to learn about workspace recommendations.
+	// Extension identifier format: ${publisher}.${name}. Example: vscode.csharp
+
+	// List of extensions which should be recommended for users of this workspace.
+	"recommendations": [
+		//C++ language support
+		"ms-vscode.cpptools",
+		//CMake build system support
+		"ms-vscode.cmake-tools",
+		//Unit tests support
+		"hbenl.vscode-test-explorer",
+		"matepek.vscode-catch2-test-adapter",
+		//Comment documentation support for Doxygen
+		"cschlosser.doxdocgen",
+		//todos lists support
+		"gruntfuggly.todo-tree",
+		//Git lens
+		"eamodio.gitlens"
+	],
+	// List of extensions recommended by VS Code that should not be recommended for users of this workspace.
+	"unwantedRecommendations": [
+		
+	]
+}
