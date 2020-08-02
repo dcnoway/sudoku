@@ -182,6 +182,9 @@ TEST_CASE("classic_board read raw data check", "[classic_board]")
     vector<wills::sudoku::cell_value_t>
         v(sudoku1, sudoku1 + sizeof(sudoku1) / sizeof(unsigned));
     board.read(v);
+    CHECK(board.shape().col_count() == 9);
+    CHECK(board.shape().row_count() == 9);
+    CHECK(board.shape().size() == 81);
     REQUIRE(board.get(1, 1) == 5);
     REQUIRE(board.get(2, 1) == 7);
     REQUIRE(board.get(2, 5) == 2);
@@ -239,41 +242,58 @@ TEST_CASE("classic_board get() boundary check", "[classic_board]")
     REQUIRE(board.get(1, 9) == 0);
 }
 
+TEST_CASE("classic_board coords2index check", "[classic_board]")
+{
+    classic_board board;
+    vector<wills::sudoku::cell_value_t>
+        v(sudoku1, sudoku1 + sizeof(sudoku1) / sizeof(unsigned));
+    board.read(v);
+    CHECK(board.shape().coords2index(1,1) == 0);
+    CHECK(board.shape().coords2index(9,1) == 8);
+    CHECK(board.shape().coords2index(1,9) == 72);
+    CHECK(board.shape().coords2index(9,9) == 80);
+}
+
+
 TEST_CASE("classic_board set() boundary check", "[classic_board]")
 {
     classic_board board;
-    REQUIRE_THROWS(board.set({0,0},1));
-    REQUIRE_THROWS(board.set({1, 0},1));
-    REQUIRE_THROWS(board.set({0, 1},1));
-    REQUIRE_THROWS(board.set({1, 1},1));
+    REQUIRE_FALSE(board.shape().check_coords(0,0));
+    CHECK_THROWS(board.set({0,0},1));
+    REQUIRE_FALSE(board.shape().check_coords(1,0));
+    CHECK_THROWS(board.set({1, 0},1));
+    REQUIRE_FALSE(board.shape().check_coords(0,1));
+    CHECK_THROWS(board.set({0, 1},1));
+    REQUIRE_FALSE(board.shape().check_coords(1,1));
+    CHECK_THROWS(board.set({1, 1},1));
 
     vector<wills::sudoku::cell_value_t>
         v(sudoku1, sudoku1 + sizeof(sudoku1) / sizeof(unsigned));
     board.read(v);
     cell_value_t value = 100;
-    REQUIRE_THROWS(board.set({0,0},value));
-    REQUIRE_THROWS(board.set({1, 0},value));
-    REQUIRE_THROWS(board.set({0, 1},value));
-    REQUIRE_NOTHROW(board.set({1, 1},value));
+    CHECK_THROWS(board.set({0,0},value));
+    CHECK_THROWS(board.set({1, 0},value));
+    CHECK_THROWS(board.set({0, 1},value));
+    CHECK_NOTHROW(board.set({1, 1},value));
     REQUIRE(board.get({1, 1}) == value);
 
-    REQUIRE_THROWS(board.set({10,0},value));
-    REQUIRE_THROWS(board.set({10, 1},value));
-    REQUIRE_THROWS(board.set({9, 0},value));
-    REQUIRE_NOTHROW(board.set({9, 1},value));
+    CHECK_THROWS(board.set({10,0},value));
+    CHECK_THROWS(board.set({10, 1},value));
+    CHECK_THROWS(board.set({9, 0},value));
+    CHECK_NOTHROW(board.set({9, 1},value));
     REQUIRE(board.get({9, 1}) == value);
 
-    REQUIRE_THROWS(board.set({0,9},value));
-    REQUIRE_THROWS(board.set({1, 10},value));
-    REQUIRE_THROWS(board.set({0, 10},value));
-    REQUIRE_NOTHROW(board.set({1, 9},value));
+    CHECK_THROWS(board.set({0,9},value));
+    CHECK_THROWS(board.set({1, 10},value));
+    CHECK_THROWS(board.set({0, 10},value));
+    CHECK_NOTHROW(board.set({1, 9},value));
     REQUIRE(board.get({1, 9}) == value);
 
 
-    REQUIRE_THROWS(board.set({10,10},value));
-    REQUIRE_THROWS(board.set({10, 9},value));
-    REQUIRE_THROWS(board.set({9, 10},value));
-    REQUIRE_NOTHROW(board.set({9, 9},value));
+    CHECK_THROWS(board.set({10,10},value));
+    CHECK_THROWS(board.set({10, 9},value));
+    CHECK_THROWS(board.set({9, 10},value));
+    CHECK_NOTHROW(board.set({9, 9},value));
     REQUIRE(board.get({9, 1}) == value);
 }
 

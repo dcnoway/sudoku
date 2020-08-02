@@ -140,24 +140,47 @@ namespace wills::sudoku
         virtual ~rectangle_region() = default;
 
         /**
-         * @brief col size of the rectangle region
-         * 
+         * @brief How many columns in the rectangle region.
+         * NOTICE:This is NOT the cell amount of one column
          * @return size_t 
          */
-        inline size_t colsize()const noexcept{return std::max(a.col,b.col) - std::min(a.col,b.col);}
+        inline size_t col_count() const noexcept 
+        { 
+            if((a.col == 0) || (b.col == 0))return 0;
+            else return std::max(a.col, b.col) - std::min(a.col, b.col) + 1; 
+        }
+
         /**
-         * @brief row size of the rectangle region
+         * @brief How many cells in one column
          * 
          * @return size_t 
          */
-        inline size_t rowsize()const noexcept{return std::max(a.row,b.row) - std::min(a.row,b.row);}
+        inline size_t cells_per_col()const noexcept{return row_count();};
+
+        /**
+         * @brief How many rows in the rectangle region
+         * NOTICE:This is NOT the cell amount of one row
+         * @return size_t 
+         */
+        inline size_t row_count()const noexcept
+        {
+            if((a.row == 0) || (b.row == 0)) return 0;
+            else return std::max(a.row,b.row) - std::min(a.row,b.row) + 1;
+        }
+
+        /**
+         * @brief How many cells in one row
+         * 
+         * @return size_t 
+         */
+        inline size_t cells_per_row()const noexcept{return col_count();};
 
         /**
          * @brief square cell size in this rectangle region
          * 
          * @return size_t 
          */
-        inline size_t size()const noexcept{return rowsize() * colsize();}
+        inline size_t size()const noexcept{return row_count() * col_count();}
 
         /**
          * @brief set the vertex coordinates
@@ -203,6 +226,42 @@ namespace wills::sudoku
         }
 
         /**
+         * @brief convert cell coords to the cell array element index
+         * 
+         * @param col 
+         * @param row 
+         * @return size_t 
+         */
+        inline size_t coords2index(const axis_value_t col, const axis_value_t row) const noexcept
+        {return (row - 1) * cells_per_row() + col - 1;};
+        /**
+         * @brief convert element index for the cell to a coordinate
+         * 
+         * @param cell_idx 
+         * @return coordinate 
+         */
+        inline coordinate index2coords(const size_t cell_idx) const noexcept
+        {
+            axis_value_t col = cell_idx % cells_per_row();
+            axis_value_t row = cell_idx / cells_per_row();
+            return coordinate{col + 1, row + 1};
+        }
+
+
+        /**
+         * @brief check coords validaties
+         * 
+         * @param col 
+         * @param row 
+         * @return true 
+         * @return false 
+         */
+        inline bool check_coords(const axis_value_t col, const axis_value_t row) const noexcept
+        {
+            return ((col > 0) && (row > 0) && (col <= cells_per_col()) && (row <= cells_per_row()));
+        }
+
+        /**
          * @brief get all cordinates within this region
          * 
          * @return std::vector<coordinate> A vector contains all the cell coordinate within this region
@@ -222,29 +281,11 @@ namespace wills::sudoku
     class classic_board : public board
     {
     private:
-        //TODO: remove col_size row_size
-        axis_value_t col_size = 0;      //<! the amount size of current board columns
-        axis_value_t row_size = 0;      //<! the amount size of current board rows
         rectangle_region _shape;        //!< the rect shape of the board
         vector<cell_value_t> _cells;     //!< cells array
         vector<std::shared_ptr<rectangle_region>> _regions;
 
     public:
-        /**
-         * @brief convert cell coords to the cell array element index
-         * 
-         * @param col 
-         * @param row 
-         * @return size_t 
-         */
-        inline size_t coords2index(const axis_value_t col, const axis_value_t row) const noexcept;
-        /**
-         * @brief convert element index for the cell to a coordinate
-         * 
-         * @param cell_idx 
-         * @return coordinate 
-         */
-        inline coordinate index2coords(const size_t cell_idx) const noexcept;
         /**
          * @brief convert cell coords to the coords of region that contains the cell
          * 
@@ -254,20 +295,6 @@ namespace wills::sudoku
          */
         inline coordinate coords2region(const axis_value_t col, const axis_value_t row) const noexcept;
 
-        /**
-         * @brief check coords validaties
-         * 
-         * @param col 
-         * @param row 
-         * @return true 
-         * @return false 
-         */
-        inline bool check_coords(const axis_value_t col, const axis_value_t row) const noexcept
-        {
-            return ((col > 0) && (row > 0) && (col <= col_size) && (row <= row_size));
-        }
-
-    public:
         /**
          * @brief 
          * 

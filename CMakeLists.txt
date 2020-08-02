@@ -10,7 +10,7 @@ SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/out)
 
 INCLUDE_DIRECTORIES(include)
 
-SET(LIB_SRC_LIST src/sudoku.cpp src/classic_solver.cpp)
+SET(LIB_SRC_LIST src/sudoku.cpp src/classic_solver.cpp src/classic_rule.cpp)
 ADD_LIBRARY(sudoku_solver STATIC ${LIB_SRC_LIST})
 
 ADD_LIBRARY(sudoku_board STATIC  src/classic_board.cpp)

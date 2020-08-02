@@ -15,7 +15,7 @@
 #include<memory>
 #include"dlx.hpp"
 #include "solver.hpp"
-
+#include "classic_board.hpp"
 using namespace std;
 namespace wills::sudoku
 {
@@ -48,9 +48,9 @@ namespace wills::sudoku
          * 
          * @param coords cell coords
          * @param cellval cell value
-         * @return pair<size_t,cell_value_t> <col index of dancing links row, value attached>
+         * @return row_t<cell_value_t> dancing links row data
          */
-        // pair<size_t,cell_value_t> dlx_row_generator(const coordinate & coords, const cell_value_t cellval)const noexcept;
+        dlx::row_t<cell_value_t> dlx_row_generator(const coordinate & coords, const cell_value_t cellval)const noexcept;
 
         /**
          * @brief parse the dancing links solve result to the classic board cell coordinates and value
@@ -58,7 +58,7 @@ namespace wills::sudoku
          * @param result_row one row of dancing links solve result data
          * @return pair<coordinate,cell_value_t>  <coords of cell,value of cell>
          */
-        // pair<coordinate,cell_value_t> dlx_row_parser(result_row_t<cell_value_t> result_row)const noexcept;
+        pair<coordinate,cell_value_t> dlx_row_parser(dlx::row_t<cell_value_t> result_row)const noexcept;
     };
 }
 

@@ -4,29 +4,22 @@
 using namespace std;
 namespace wills::sudoku
 {
-    inline size_t classic_board::coords2index(const axis_value_t col, const axis_value_t row) const noexcept
-    {
-        return (row - 1) * row_size + col - 1;
-    }
-
-    inline coordinate classic_board::index2coords(const size_t cell_idx) const noexcept
-    {
-        axis_value_t col = cell_idx % row_size;
-        axis_value_t row = cell_idx / row_size;
-        return coordinate{col + 1, row + 1};
-    }
 
     inline coordinate classic_board::coords2region(const axis_value_t col, const axis_value_t row) const noexcept
     {
-        axis_value_t rcol = (col - 1) / col_size + 1;
-        axis_value_t rrow = (row - 1) / row_size + 1;
-        return coordinate{rcol, rrow};
+        for(const auto & reg:_regions){
+            if(reg->contains(square_cell(coordinate{col,row}))){
+                //TODO: need impl
+                return coordinate{0,0};        
+            }
+        }
+        return coordinate{0,0};
     }
 
     cell_value_t classic_board::get(const axis_value_t col, const axis_value_t row) const
     {
-        if(check_coords(col,row))
-            return _cells[coords2index(col, row)];
+        if(_shape.check_coords(col,row))
+            return _cells[_shape.coords2index(col, row)];
         else return CELL_COORDS_ERROR;
     }
 
@@ -37,18 +30,19 @@ namespace wills::sudoku
 
     void classic_board::set(const coordinate & cords,const cell_value_t val)
     {
-        if(!check_coords(cords.col,cords.row))
+        if(!_shape.check_coords(cords.col,cords.row))
             throw range_error("set value to a cell with a coordinate out of range");
         else
         {
-            _cells[coords2index(cords.col,cords.row)] = val;
+            _cells[_shape.coords2index(cords.col,cords.row)] = val;
         }
     }
 
     size_t classic_board::read(const std::vector<cell_value_t> &arr)
     {
-        size_t region_col_len = 0;
-        size_t region_row_len = 0;
+        axis_value_t region_col_len = 0;
+        axis_value_t region_row_len = 0;
+        axis_value_t col_size = 0, row_size = 0;
         size_t result = 0;
         switch (arr.size())
         {
@@ -155,7 +149,8 @@ namespace wills::sudoku
     {
         for(int i = 0; i< v._cells.size(); ++i){
             os << v._cells[i] ;
-            if( i % v.col_size == v.col_size -1)
+            if( (i % v.shape().cells_per_row()) 
+                == (v.shape().cells_per_row() -1))
                 os << endl;
             else os << ',';
         }

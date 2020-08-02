@@ -12,7 +12,7 @@
 #include "classic_solver.hpp"
 #include "classic_board.hpp"
 #include "dlx.hpp"
-
+#include "rule.hpp"
 using namespace std;
 using namespace wills::dlx;
 namespace wills::sudoku
@@ -34,9 +34,9 @@ namespace wills::sudoku
         }
 
         size_t dlxcol   = bshape.size() 
-                        + bshape.colsize() * bshape.colsize() 
-                        + bshape.rowsize() * bshape.rowsize() 
-                        + pb->regions().size() * bshape.colsize();
+                        + bshape.cells_per_col() * bshape.cells_per_col() 
+                        + bshape.cells_per_row() * bshape.cells_per_row() 
+                        + pb->regions().size() * pb->regions().size();
 
         dlx.init_cols(dlxcol);
 
@@ -53,6 +53,18 @@ namespace wills::sudoku
             //Rule 4: every rectangle region contains every number in [1,col_size]
         }
         return nullptr;
+    }
+
+
+    row_t<cell_value_t> classic_solver::dlx_row_generator(const coordinate &coords, const cell_value_t cellval) const noexcept
+    {
+        row_t<cell_value_t> result;
+        return result;
+    }
+
+    pair<coordinate, cell_value_t> classic_solver::dlx_row_parser(row_t<cell_value_t> result_row) const noexcept
+    {
+        return {{0,0},0};
     }
 
 } // namespace wills::sudoku
