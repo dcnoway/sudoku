@@ -15,6 +15,7 @@
 #include <iostream>
 #include <memory>
 #include "board.hpp"
+#include <algorithm>
 namespace wills::sudoku
 {
     using namespace std;
@@ -41,7 +42,7 @@ namespace wills::sudoku
      * @brief the type of cell coordinate factor, ZERO is reserved for internal use
      * 
      */
-    using axis_value_t = unsigned;
+    using axis_value_t = size_t;
 
     /**
      * @brief coordinate of sudoku board cells

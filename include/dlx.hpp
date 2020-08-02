@@ -16,6 +16,7 @@
 #include <exception>
 #include <stack>
 #include <functional>
+#include <optional>
 using namespace std;
 
 namespace wills::dlx
@@ -420,7 +421,7 @@ namespace wills::dlx
          * @brief Construct a new dancing links object
          * 
          */
-        dancing_links() : root(), headers(), nodes(){};
+        dancing_links() : root(), nodes(), headers(){};
 
         /**
          * @brief stream output function for whole dancing link

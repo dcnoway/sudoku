@@ -107,6 +107,7 @@ namespace wills::sudoku{
         /* data */
     protected:
     public:
+        virtual ~board() = default;
         /**
          * @brief get all cells
          * 

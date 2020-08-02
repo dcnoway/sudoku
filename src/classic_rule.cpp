@@ -57,6 +57,7 @@ namespace wills::sudoku::rules
     }
     pair<coordinate, cell_value_t> no_duplicated_number_in_row::parse(const rectangle_region & board_shape, value_t<cell_value_t> cell) const
     {
+        return make_pair<coordinate,cell_value_t>(coordinate{0,0},0);
     }
 
     /**********************************************************************************************/
@@ -85,19 +86,24 @@ namespace wills::sudoku::rules
     }
     pair<coordinate, cell_value_t> no_duplicated_number_in_col::parse(const rectangle_region & board_shape, value_t<cell_value_t> cell) const
     {
+        return make_pair<coordinate,cell_value_t>(coordinate{0,0},0);
     }
 
     /**********************************************************************************************/
     size_t no_duplicated_number_in_region::dlx_cols(const rectangle_region &board_shape)const
     {
         //TODO: amount of regions * how many cells per region
+        return 0;
     }
     value_t<cell_value_t> no_duplicated_number_in_region::generate(const rectangle_region & board_shape, const coordinate & coords, cell_value_t cellval) const
     {
         //TODO: region index of cell * how many cells per region + cellval;
+        value_t<cell_value_t> result{0};
+        return result;
     }
     pair<coordinate, cell_value_t> no_duplicated_number_in_region::parse(const rectangle_region & board_shape, value_t<cell_value_t> cell) const
     {
+        return make_pair<coordinate,cell_value_t>(coordinate{0,0},0);
     }
     
 } // namespace wills::sudoku

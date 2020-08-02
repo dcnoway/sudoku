@@ -43,7 +43,7 @@ namespace wills::sudoku
         axis_value_t region_col_len = 0;
         axis_value_t region_row_len = 0;
         axis_value_t col_size = 0, row_size = 0;
-        size_t result = 0;
+        // size_t result = 0;
         switch (arr.size())
         {
         case 3 * 3:
