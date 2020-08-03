@@ -8,36 +8,54 @@
  * @copyright Copyright (c) 2020
  * 
  */
-#include<memory>
 #include "classic_rule.hpp"
 using namespace std;
 using namespace wills::dlx;
 namespace wills::sudoku::rules
 {
-    size_t every_cell_must_has_a_number::dlx_cols(const rectangle_region &board_shape) const
+    void every_cell_must_has_a_number::attach(const std::shared_ptr<classic_board> &board)
     {
-        return board_shape.size();
+        this->board = board;
     }
-    value_t<cell_value_t> every_cell_must_has_a_number::generate(const rectangle_region & board_shape, const coordinate & coords, cell_value_t cellval) const
+
+    size_t every_cell_must_has_a_number::dlx_cols() const
     {
-        value_t<cell_value_t> result;
-        result.val = cellval;
-        result.col = board_shape.coords2index(coords.col, coords.row) + 1;
+        return board->shape().size();
+    }
+
+    std::vector<row_t<sudoku_cell_t>> every_cell_must_has_a_number::generate_dlx_row() const
+    {
+        std::vector<row_t<sudoku_cell_t>> result;
+
+        // result.val = cellval;
+        // result.col = board_shape.coords2index(coords.col, coords.row) + 1;
         return result;
     }
-    pair<coordinate, cell_value_t> every_cell_must_has_a_number::parse(const rectangle_region & board_shape, value_t<cell_value_t> cell) const
+    std::vector<classic_board> every_cell_must_has_a_number::parse_dlx_result(const std::vector<row_t<sudoku_cell_t>> &rslt) const
     {
-        return {board_shape.index2coords(cell.col - 1),cell.val};
+        std::vector<classic_board> result;
+        return result;
+    }
+    bool every_cell_must_has_a_number::check_answer(const std::shared_ptr<classic_board> &board)const
+    {
+        return false;
     }
 
     /**********************************************************************************************/
-    size_t no_duplicated_number_in_row::dlx_cols(const rectangle_region &board_shape) const
+    void no_duplicated_number_in_row::attach(const std::shared_ptr<classic_board> &board)
     {
-        return board_shape.cells_per_row() * board_shape.cells_per_row();
+        this->board = board;
+    }
+    
+    size_t no_duplicated_number_in_row::dlx_cols() const
+    {
+        return board->shape().cells_per_row() * board->shape().cells_per_row();
     }
 
-    value_t<cell_value_t> no_duplicated_number_in_row::generate(const rectangle_region & board_shape, const coordinate & coords, cell_value_t cellval) const
+    std::vector<row_t<sudoku_cell_t>> no_duplicated_number_in_row::generate_dlx_row() const
     {
+        std::vector<row_t<sudoku_cell_t>> result;
+        /* Logic for a single cell
         value_t<cell_value_t> result;
         if(cellval > 0){
             result.val = cellval;
@@ -54,19 +72,35 @@ namespace wills::sudoku::rules
             throw logic_error("Not implemented yet. Negative cell value reserved for variant sudoku.");
         }
         return result;
+
+        */
+        return result;        
     }
-    pair<coordinate, cell_value_t> no_duplicated_number_in_row::parse(const rectangle_region & board_shape, value_t<cell_value_t> cell) const
+    std::vector<classic_board> no_duplicated_number_in_row::parse_dlx_result(const std::vector<row_t<sudoku_cell_t>> & rslt) const
     {
-        return make_pair<coordinate,cell_value_t>(coordinate{0,0},0);
+        std::vector<classic_board> result;
+        return result;
     }
 
-    /**********************************************************************************************/
-    size_t no_duplicated_number_in_col::dlx_cols(const rectangle_region &board_shape) const
+    bool no_duplicated_number_in_row::check_answer(const std::shared_ptr<classic_board> &board) const
     {
-        return board_shape.cells_per_col() * board_shape.cells_per_col();
+        return false;
     }
-    value_t<cell_value_t> no_duplicated_number_in_col::generate(const rectangle_region & board_shape, const coordinate & coords, cell_value_t cellval) const
+    /**********************************************************************************************/
+    void no_duplicated_number_in_col::attach(const std::shared_ptr<classic_board> &board)
     {
+        this->board = board;
+    }
+
+    size_t no_duplicated_number_in_col::dlx_cols() const
+    {
+        return board->shape().cells_per_col() * board->shape().cells_per_col();
+    }
+
+    std::vector<row_t<sudoku_cell_t>> no_duplicated_number_in_col::generate_dlx_row() const
+    {
+        std::vector<row_t<sudoku_cell_t>> result;
+        /*
         value_t<cell_value_t> result;
         if(cellval > 0){
             result.val = cellval;
@@ -82,28 +116,51 @@ namespace wills::sudoku::rules
         else{
             throw logic_error("Not implemented yet. Negative cell value reserved for variant sudoku.");
         }
+        */
         return result;
     }
-    pair<coordinate, cell_value_t> no_duplicated_number_in_col::parse(const rectangle_region & board_shape, value_t<cell_value_t> cell) const
+
+    std::vector<classic_board> no_duplicated_number_in_col::parse_dlx_result(const std::vector<row_t<sudoku_cell_t>> & rslt) const
     {
-        return make_pair<coordinate,cell_value_t>(coordinate{0,0},0);
+        std::vector<classic_board> result;
+        // return make_pair<coordinate,cell_value_t>(coordinate{0,0},0);
+        return result;
+    }
+
+    bool no_duplicated_number_in_col::check_answer(const std::shared_ptr<classic_board> &board) const
+    {
+        return false;
     }
 
     /**********************************************************************************************/
-    size_t no_duplicated_number_in_region::dlx_cols(const rectangle_region &board_shape)const
+    void no_duplicated_number_in_region::attach(const std::shared_ptr<classic_board> &board)
+    {
+        this->board = board;
+    }
+
+    size_t no_duplicated_number_in_region::dlx_cols()const
     {
         //TODO: amount of regions * how many cells per region
         return 0;
     }
-    value_t<cell_value_t> no_duplicated_number_in_region::generate(const rectangle_region & board_shape, const coordinate & coords, cell_value_t cellval) const
+
+    std::vector<row_t<sudoku_cell_t>> no_duplicated_number_in_region::generate_dlx_row() const
     {
         //TODO: region index of cell * how many cells per region + cellval;
-        value_t<cell_value_t> result{0};
+        std::vector<row_t<sudoku_cell_t>> result;
         return result;
     }
-    pair<coordinate, cell_value_t> no_duplicated_number_in_region::parse(const rectangle_region & board_shape, value_t<cell_value_t> cell) const
+
+    std::vector<classic_board> no_duplicated_number_in_region::parse_dlx_result(const std::vector<row_t<sudoku_cell_t>> & rslt) const
     {
-        return make_pair<coordinate,cell_value_t>(coordinate{0,0},0);
+        std::vector<classic_board> result;
+        // return make_pair<coordinate,cell_value_t>(coordinate{0,0},0);
+        return result;
+    }
+
+    bool no_duplicated_number_in_region::check_answer(const std::shared_ptr<classic_board> &board) const
+    {
+        return false;
     }
     
 } // namespace wills::sudoku

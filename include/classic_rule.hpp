@@ -14,35 +14,58 @@
 #include "rule.hpp"
 namespace wills::sudoku::rules
 {
-    //some rule generator need board info, i.e how many regions in board  and cell belongs to which region and how many cells per region
-    //one rule generate one or more rows for dlx, on the contrarary, one solve result row from dlx need one or more rule parser
-    //TODO: class diagram need refactor to fit above two lines
-    //TODO: design class diagram for post solve or rules contain computetaional relation between two or more cells, like N-sum sudokuddd
     class every_cell_must_has_a_number : public rule
     {
+        private:
+        std::shared_ptr<classic_board> board;
         public:
-        size_t dlx_cols(const rectangle_region &board_shape) const override;
-        value_t<cell_value_t> generate(const rectangle_region & board_shape, const coordinate & coords, cell_value_t cellval) const override;
-        pair<coordinate, cell_value_t> parse(const rectangle_region & board_shape, value_t<cell_value_t> cell) const override;        
+        string getname() const override {return "Classic:every_cell_must_has_a_number";};
+        void attach(const std::shared_ptr<classic_board> &board) override;
+        bool parse() override {return true;};
+        size_t dlx_cols() const override;
+        std::vector<row_t<sudoku_cell_t>> generate_dlx_row() const override;
+        std::vector<classic_board> parse_dlx_result(const std::vector<row_t<sudoku_cell_t>> & rslt) const override;
+        bool check_answer(const std::shared_ptr<classic_board> &board) const override;
     };
 
     class no_duplicated_number_in_row : public rule
     {
-        size_t dlx_cols(const rectangle_region &board_shape) const override;
-        value_t<cell_value_t> generate(const rectangle_region & board_shape, const coordinate & coords, cell_value_t cellval) const override;
-        pair<coordinate, cell_value_t> parse(const rectangle_region & board_shape, value_t<cell_value_t> cell) const override;        
+        private:
+        std::shared_ptr<classic_board> board;
+        public:
+        string getname() const override {return "Classic:no_duplicated_number_in_row";};
+        void attach(const std::shared_ptr<classic_board> &board) override;
+        bool parse() override {return true;};
+        size_t dlx_cols() const override;
+        std::vector<row_t<sudoku_cell_t>> generate_dlx_row() const override;
+        std::vector<classic_board> parse_dlx_result(const std::vector<row_t<sudoku_cell_t>> & rslt) const override;
+        bool check_answer(const std::shared_ptr<classic_board> &board) const override;
     };
     class no_duplicated_number_in_col :public rule
     {
-        size_t dlx_cols(const rectangle_region &board_shape) const override;
-        value_t<cell_value_t> generate(const rectangle_region & board_shape, const coordinate & coords, cell_value_t cellval) const override;
-        pair<coordinate, cell_value_t> parse(const rectangle_region & board_shape, value_t<cell_value_t> cell) const override;        
+        private:
+        std::shared_ptr<classic_board> board;
+        public:
+        string getname() const override {return "Classic:no_duplicated_number_in_col";};
+        void attach(const std::shared_ptr<classic_board> &board) override;
+        bool parse() override {return true;};
+        size_t dlx_cols() const override;
+        std::vector<row_t<sudoku_cell_t>> generate_dlx_row() const override;
+        std::vector<classic_board> parse_dlx_result(const std::vector<row_t<sudoku_cell_t>> & rslt) const override;
+        bool check_answer(const std::shared_ptr<classic_board> &board) const override;
     };
     class no_duplicated_number_in_region : public rule
     {
-        size_t dlx_cols(const rectangle_region &board_shape) const override;
-        value_t<cell_value_t> generate(const rectangle_region & board_shape, const coordinate & coords, cell_value_t cellval) const override;
-        pair<coordinate, cell_value_t> parse(const rectangle_region & board_shape, value_t<cell_value_t> cell) const override;        
+        private:
+        std::shared_ptr<classic_board> board;
+        public:
+        string getname() const override {return "Classic:no_duplicated_number_in_region";};
+        void attach(const std::shared_ptr<classic_board> &board) override;
+        bool parse() override {return true;};
+        size_t dlx_cols() const override;
+        std::vector<row_t<sudoku_cell_t>> generate_dlx_row() const override;
+        std::vector<classic_board> parse_dlx_result(const std::vector<row_t<sudoku_cell_t>> & rslt) const override;
+        bool check_answer(const std::shared_ptr<classic_board> &board) const override;
     };
 } // namespace wills::sudoku
 
