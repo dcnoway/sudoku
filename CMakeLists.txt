@@ -10,13 +10,14 @@ SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/out)
 
 INCLUDE_DIRECTORIES(include)
 
-SET(LIB_SRC_LIST src/sudoku.cpp src/classic_solver.cpp src/classic_rule.cpp)
-ADD_LIBRARY(sudoku_solver STATIC ${LIB_SRC_LIST})
-
 ADD_LIBRARY(sudoku_board STATIC  src/classic_board.cpp)
 
+SET(LIB_SRC_LIST src/sudoku.cpp src/classic_rule.cpp src/classic_board.cpp)
+ADD_LIBRARY(sudoku_solver STATIC ${LIB_SRC_LIST})
+
+
 ADD_EXECUTABLE(sudoku src/main.cpp)
-TARGET_LINK_LIBRARIES(sudoku sudoku_solver sudoku_board)
+TARGET_LINK_LIBRARIES(sudoku sudoku_solver)
 
 #################################################
 # CXX unit test segement

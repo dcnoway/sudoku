@@ -13,7 +13,6 @@
 #include <list>
 #include <vector>
 #include <memory>
-#include "solver.hpp"
 #include "rule.hpp"
 #include "sudokucommon.hpp"
 namespace wills::sudoku
