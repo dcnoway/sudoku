@@ -510,55 +510,38 @@ namespace wills::dlx
 
         size_t append_row(const row_t<T> & row)
         {
-            return append_row(row.begin(),row.size());
-        }
-
-        /**
-         * @brief append a row to the end of the dancing links
-         * 
-         * @param values a array contains all column index and the node value.
-         * - a valid column index MUST belongs to [1,col_size()] of the DancingLinks instance.
-         * - the length of values[] MUST belongs to [0,col_size()] of the DancingLinks instance.
-         * - call this function with a blank row(means that a zero length array values), it will do nothing but return the current max row index.
-         * @param values_len the length of values[]
-         * @return size_t the row index of appended row.
-         * - 0       append failed.
-         * - no-zero append succeded and return value is the row index of appended row.
-         */
-        size_t append_row(const value_t<T> values[], const size_t values_len)
-        {
             //==================================================
             //Begin paramter validaties check
-            if (values_len > headers.size())
+            if (row.size() > headers.size())
                 throw length_error("append row length exceed col limits.");
 
             //check the maximum col in the values array
-            for (size_t i = 0; i < values_len; ++i)
+            for (size_t i = 0; i < row.size(); ++i)
             {
-                if (values[i].col == 0)
+                if (row[i].col == 0)
                     throw invalid_argument("append a dlx row with a zero col index.");
-                if (values[i].col > headers.size())
+                if (row[i].col > headers.size())
                     throw invalid_argument("the maximum col of append row exceed col limits.");
             }
 
             //check values array is sorted by col or not
             //if values array is unsorted, then the link list logic will goes wrong
-            for (size_t i = 1; i < values_len; ++i)
+            for (size_t i = 1; i < row.size(); ++i)
             {
-                if (values[i].col <= values[i - 1].col)
+                if (row[i].col <= row[i - 1].col)
                     throw logic_error("call append_row with a unsorted value array.");
             }
             //End paramter validaties check
             //==================================================
 
             //Blank row append with no effections
-            if (values_len == 0)
+            if (row.size() == 0)
                 return root.row_count;
 
             node<T> *pfirst = nullptr;
-            for (int i = 0; i < values_len; ++i)
+            for (int i = 0; i < row.size(); ++i)
             {
-                auto v = values[i];
+                auto v = row[i];
                 pnode_t<T> pnode = std::make_shared<node<T>>(v.val);
                 pnode->col = v.col;
                 pnode->row = root.row_count + 1;
@@ -582,6 +565,79 @@ namespace wills::dlx
                 }
             }
             return ++root.row_count;
+        }
+
+        /**
+         * @brief append a row to the end of the dancing links
+         * 
+         * @param values a array contains all column index and the node value.
+         * - a valid column index MUST belongs to [1,col_size()] of the DancingLinks instance.
+         * - the length of values[] MUST belongs to [0,col_size()] of the DancingLinks instance.
+         * - call this function with a blank row(means that a zero length array values), it will do nothing but return the current max row index.
+         * @param row.size() the length of values[]
+         * @return size_t the row index of appended row.
+         * - 0       append failed.
+         * - no-zero append succeded and return value is the row index of appended row.
+         */
+        size_t append_row(const value_t<T> * values, const size_t values_len)
+        {
+            row_t<T> row(values,values + values_len);
+            return append_row(row);
+            // //==================================================
+            // //Begin paramter validaties check
+            // if (values_len > headers.size())
+            //     throw length_error("append row length exceed col limits.");
+
+            // //check the maximum col in the values array
+            // for (size_t i = 0; i < values_len; ++i)
+            // {
+            //     if (values[i].col == 0)
+            //         throw invalid_argument("append a dlx row with a zero col index.");
+            //     if (values[i].col > headers.size())
+            //         throw invalid_argument("the maximum col of append row exceed col limits.");
+            // }
+
+            // //check values array is sorted by col or not
+            // //if values array is unsorted, then the link list logic will goes wrong
+            // for (size_t i = 1; i < values_len; ++i)
+            // {
+            //     if (values[i].col <= values[i - 1].col)
+            //         throw logic_error("call append_row with a unsorted value array.");
+            // }
+            // //End paramter validaties check
+            // //==================================================
+
+            // //Blank row append with no effections
+            // if (values_len == 0)
+            //     return root.row_count;
+
+            // node<T> *pfirst = nullptr;
+            // for (int i = 0; i < values_len; ++i)
+            // {
+            //     auto v = values[i];
+            //     pnode_t<T> pnode = std::make_shared<node<T>>(v.val);
+            //     pnode->col = v.col;
+            //     pnode->row = root.row_count + 1;
+
+            //     if (headers[v.col - 1]->append(pnode.get()) != headers[v.col - 1].get())
+            //         throw logic_error("append node error!");
+            //     else
+            //     {
+            //         //pleft pright
+            //         if (nullptr == pfirst)
+            //         {
+            //             pfirst = pnode.get();
+            //         }
+            //         pnode->p_left = pfirst->p_left;
+            //         pnode->p_right = pfirst;
+
+            //         pnode->p_left->p_right = pnode.get();
+            //         pnode->p_right->p_left = pnode.get();
+            //         //keep smart ptr managed by a vector
+            //         nodes.push_back(pnode);
+            //     }
+            // }
+            // return ++root.row_count;
         }
 
         /**
