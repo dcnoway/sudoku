@@ -24,6 +24,7 @@ namespace wills::sudoku
     constexpr unsigned Addsum =                 0x00000008;
     constexpr unsigned NeighbourDifference =    0x00000010;
 
-    using sudoku_cell_t = unsigned;
+    //TODO: MERGE conflict between sudoku_cell_t here and cell_value_t in classic_board
+    using sudoku_cell_t = int;
 }
 #endif

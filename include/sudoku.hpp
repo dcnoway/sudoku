@@ -14,12 +14,10 @@
 #include <vector>
 #include <memory>
 #include "solver.hpp"
+#include "rule.hpp"
+#include "sudokucommon.hpp"
 namespace wills::sudoku
 {
-    class parser
-    {
-
-    };
 
 
     /**
@@ -28,19 +26,13 @@ namespace wills::sudoku
      */
     class sudoku
     {
+        private:
+        std::shared_ptr<classic_board> board;
+        std::vector<std::shared_ptr<rule>> rules;
         public:
-        /**
-         * @brief Get the solver object
-         * 
-         * @return solver 
-         */
-        virtual solver get_solver() = 0;
-        /**
-         * @brief Get the parser object
-         * 
-         * @return parser 
-         */
-        virtual parser get_parser() = 0;
+        bool load_cells(std::vector<sudoku_cell_t> cell_array);
+        void add_rule(std::shared_ptr<rule> rule);
+        std::vector<classic_board> solve();
     };
 
 } // namespace wills
