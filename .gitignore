@@ -1,9 +1,11 @@
+.vs/
 bin/*
 !bin/placeholder
 out/*
 !out/placeholder
 build/
 docs/
+*.ldb
 # Prerequisites
 *.d
 
