@@ -12,7 +12,7 @@ INCLUDE_DIRECTORIES(include)
 
 ADD_LIBRARY(sudoku_board STATIC  src/classic_board.cpp)
 
-SET(LIB_SRC_LIST src/sudoku.cpp src/classic_rule.cpp src/classic_board.cpp)
+SET(LIB_SRC_LIST src/sudoku.cpp src/classic_rule.cpp src/classic_board.cpp src/classic_enumerator.cpp)
 ADD_LIBRARY(sudoku_solver STATIC ${LIB_SRC_LIST})
 
 
