@@ -50,9 +50,9 @@ namespace wills::sudoku
      */
     struct coordinate
     {
+        public:
         axis_value_t col; //!< column
         axis_value_t row; //!< row
-        public:
         /**
          * @brief Construct a new coordinate object
          * 
@@ -74,14 +74,16 @@ namespace wills::sudoku
     class square_cell : public cell, public coordinate
     {
     public:
-        square_cell() : cell(), coordinate() {}
+        cell_value_t value;
+        square_cell() : cell(), coordinate(),value(0) {}
         /**
          * @brief Construct a new square cell object
          * 
          * @param cds 
+         * @param val
          */
-        square_cell(const coordinate &cds) : cell(), coordinate(cds) {}
-        ~square_cell(){};
+        square_cell(const coordinate &cds,const cell_value_t & val) : cell(), coordinate(cds),value(val) {}
+        ~square_cell() = default;
     };
 
     /**

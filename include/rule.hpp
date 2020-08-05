@@ -58,7 +58,8 @@ namespace wills::sudoku
          * 
          * @return std::vector<row_t<sudoku_cell_t>> row data for dlx
          */
-        virtual std::vector<row_t<sudoku_cell_t>> generate_dlx_row() const = 0;
+        virtual row_t<sudoku_cell_t> generate_dlx_row(const coordinate & coords, const sudoku_cell_t & val) const = 0;
+
         /**
          * @brief parse dlx(dancing links) solve result data to answer
          * 

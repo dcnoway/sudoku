@@ -23,9 +23,9 @@ namespace wills::sudoku::rules
         return board->shape().size();
     }
 
-    std::vector<row_t<sudoku_cell_t>> every_cell_must_has_a_number::generate_dlx_row() const
+    row_t<sudoku_cell_t> every_cell_must_has_a_number::generate_dlx_row(const coordinate & coords, const sudoku_cell_t & val) const
     {
-        std::vector<row_t<sudoku_cell_t>> result;
+        row_t<sudoku_cell_t> result;
 
         // result.val = cellval;
         // result.col = board_shape.coords2index(coords.col, coords.row) + 1;
@@ -52,9 +52,9 @@ namespace wills::sudoku::rules
         return board->shape().cells_per_row() * board->shape().cells_per_row();
     }
 
-    std::vector<row_t<sudoku_cell_t>> no_duplicated_number_in_row::generate_dlx_row() const
+    row_t<sudoku_cell_t> no_duplicated_number_in_row::generate_dlx_row(const coordinate & coords, const sudoku_cell_t & val) const
     {
-        std::vector<row_t<sudoku_cell_t>> result;
+        row_t<sudoku_cell_t> result;
         /* Logic for a single cell
         value_t<cell_value_t> result;
         if(cellval > 0){
@@ -97,9 +97,9 @@ namespace wills::sudoku::rules
         return board->shape().cells_per_col() * board->shape().cells_per_col();
     }
 
-    std::vector<row_t<sudoku_cell_t>> no_duplicated_number_in_col::generate_dlx_row() const
+    row_t<sudoku_cell_t> no_duplicated_number_in_col::generate_dlx_row(const coordinate & coords, const sudoku_cell_t & val) const
     {
-        std::vector<row_t<sudoku_cell_t>> result;
+        row_t<sudoku_cell_t> result;
         /*
         value_t<cell_value_t> result;
         if(cellval > 0){
@@ -144,10 +144,9 @@ namespace wills::sudoku::rules
         return 0;
     }
 
-    std::vector<row_t<sudoku_cell_t>> no_duplicated_number_in_region::generate_dlx_row() const
+    row_t<sudoku_cell_t> no_duplicated_number_in_region::generate_dlx_row(const coordinate & coords, const sudoku_cell_t & val) const
     {
-        //TODO: region index of cell * how many cells per region + cellval;
-        std::vector<row_t<sudoku_cell_t>> result;
+        row_t<sudoku_cell_t> result;
         return result;
     }
 

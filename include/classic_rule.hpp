@@ -23,7 +23,7 @@ namespace wills::sudoku::rules
         void attach(const std::shared_ptr<classic_board> &board) override;
         bool parse() override {return true;};
         size_t dlx_cols() const override;
-        std::vector<row_t<sudoku_cell_t>> generate_dlx_row() const override;
+        row_t<sudoku_cell_t> generate_dlx_row(const coordinate & coords, const sudoku_cell_t & val) const override;
         std::vector<classic_board> parse_dlx_result(const std::vector<row_t<sudoku_cell_t>> & rslt) const override;
         bool check_answer(const std::shared_ptr<classic_board> &board) const override;
     };
@@ -37,7 +37,7 @@ namespace wills::sudoku::rules
         void attach(const std::shared_ptr<classic_board> &board) override;
         bool parse() override {return true;};
         size_t dlx_cols() const override;
-        std::vector<row_t<sudoku_cell_t>> generate_dlx_row() const override;
+        row_t<sudoku_cell_t> generate_dlx_row(const coordinate & coords, const sudoku_cell_t & val) const override;
         std::vector<classic_board> parse_dlx_result(const std::vector<row_t<sudoku_cell_t>> & rslt) const override;
         bool check_answer(const std::shared_ptr<classic_board> &board) const override;
     };
@@ -50,7 +50,7 @@ namespace wills::sudoku::rules
         void attach(const std::shared_ptr<classic_board> &board) override;
         bool parse() override {return true;};
         size_t dlx_cols() const override;
-        std::vector<row_t<sudoku_cell_t>> generate_dlx_row() const override;
+        row_t<sudoku_cell_t> generate_dlx_row(const coordinate & coords, const sudoku_cell_t & val) const override;
         std::vector<classic_board> parse_dlx_result(const std::vector<row_t<sudoku_cell_t>> & rslt) const override;
         bool check_answer(const std::shared_ptr<classic_board> &board) const override;
     };
@@ -63,7 +63,7 @@ namespace wills::sudoku::rules
         void attach(const std::shared_ptr<classic_board> &board) override;
         bool parse() override {return true;};
         size_t dlx_cols() const override;
-        std::vector<row_t<sudoku_cell_t>> generate_dlx_row() const override;
+        row_t<sudoku_cell_t> generate_dlx_row(const coordinate & coords, const sudoku_cell_t & val) const override;
         std::vector<classic_board> parse_dlx_result(const std::vector<row_t<sudoku_cell_t>> & rslt) const override;
         bool check_answer(const std::shared_ptr<classic_board> &board) const override;
     };
