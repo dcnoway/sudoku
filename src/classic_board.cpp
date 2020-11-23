@@ -8,7 +8,7 @@ namespace wills::sudoku
     inline coordinate classic_board::coords2region(const axis_value_t col, const axis_value_t row) const noexcept
     {
         for(const auto & reg:_regions){
-            if(reg->contains(square_cell(coordinate{col,row}))){
+            if(reg->contains(coordinate{col,row})){
                 //TODO: need impl
                 return coordinate{0,0};        
             }

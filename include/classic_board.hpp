@@ -83,6 +83,7 @@ namespace wills::sudoku
          * @param val
          */
         square_cell(const coordinate &cds,const cell_value_t & val) : cell(), coordinate(cds),value(val) {}
+        square_cell(const coordinate & cds):cell(),coordinate(cds),value(CELL_COORDS_ERROR){}
         ~square_cell() = default;
     };
 
@@ -222,10 +223,15 @@ namespace wills::sudoku
          */
         bool contains(const square_cell &acell) const noexcept
         {
-            return ((acell.col >= std::min(a.col, b.col)) &&
-                    (acell.col <= std::max(a.col, b.col)) &&
-                    (acell.row >= std::min(a.row, b.row)) &&
-                    (acell.row <= std::max(a.row, b.row)));
+            return contains(static_cast<coordinate>(acell));
+        }
+
+        bool contains(const coordinate & coords) const noexcept
+        {
+            return ((coords.col >= std::min(a.col, b.col)) &&
+                    (coords.col <= std::max(a.col, b.col)) &&
+                    (coords.row >= std::min(a.row, b.row)) &&
+                    (coords.row <= std::max(a.row, b.row)));            
         }
 
         /**
